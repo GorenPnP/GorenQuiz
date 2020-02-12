@@ -1,0 +1,7 @@
+{
+  "name": "Quizly",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+
+
+
+
+<ion-content>
+
+  <form>
+    <ion-item>
+      <ion-label position="floating">Name <ion-text color="danger">*</ion-text></ion-label>
+      <ion-input class="form-control" required="true" minlength=4 maxlength=50 [(ngModel)]="name" name="name"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Passwort <ion-text color="danger">*</ion-text></ion-label>
+      <ion-input class="form-control" required="true" minlength=8 maxlength=50 type="password" [(ngModel)]="password" name="password"></ion-input>
+    </ion-item>
+
+    <ion-button type="submit" expand="block" (click)="submit()">Login</ion-button>
+  </form>
+
+  <ion-text [routerLink]="['/signin']" routerDirection="forward" style="text-decoration:underline">Noch keinen Account?</ion-text>
+
+    <ion-text [routerLink]="['/creators']" routerDirection="forward" style="text-decoration:underline">Creators</ion-text>
+</ion-content>
