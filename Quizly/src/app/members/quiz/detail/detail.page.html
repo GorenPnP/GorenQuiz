@@ -1,9 +1,86 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>detail</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="goHome()">
+        <ion-icon slot="icon-only" name="home"></ion-icon>
+      </ion-button>
+
+      <ion-button (click)="reportError()">
+        <ion-icon slot="icon-only" name="alert"></ion-icon>
+      </ion-button>
+
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-text *ngIf="!questionData" class="ion-text-center ion-text-wrap">Keine Frage vorhanden</ion-text>
 
+  <ion-grid fixed *ngIf="questionData">
+    <ion-row class="question-tile">
+      <ion-col size-lg="2" size-sm="6" size-xs="12">
+        <ion-text class="ion-text-wrap">Thema: </ion-text><ion-text class="ion-text-wrap">{{ questionData.topic }}</ion-text>
+      </ion-col>
+      <ion-col size-lg="1" size-sm="3" size-xs="6">
+        <ion-text class="ion-text-wrap">Bundle: </ion-text><ion-text class="ion-text-wrap">{{ questionData.bundle }}</ion-text>
+      </ion-col>
+      <ion-col size-lg="1" size-sm="3" size-xs="6">
+        <ion-text class="ion-text-wrap">Punkte: </ion-text><ion-text class="ion-text-wrap">{{ questionData.points }}</ion-text>
+      </ion-col>
+
+      <ion-col size-lg="3" size-sm="6" size-xs="12">
+        <ion-slides *ngIf="questionData.question.images" [options]="sliderConfig" class="slidesResponsive" [pager]="questionData.question.images.length > 1">
+          <ion-slide *ngFor="let img of questionData.question.images">
+            <ion-card class="noHeader">
+              <ion-card-content>
+                <div class="swiper-zoom-container">
+                  <img [src]='img.resLocation'/>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-slide>
+        </ion-slides>
+      </ion-col>
+
+      <ion-col size-lg="5" size-sm="6" size-xs="12">
+        <ion-text class="ion-text-wrap">Frage: </ion-text><ion-text class="ion-text-wrap">{{ questionData.question.text }}</ion-text>
+      </ion-col>
+
+    </ion-row>
+
+    <ion-row *ngFor="let answerOption of questionData.answer_options" class="answer-tile">
+      <ion-col size-sm="1" size-xs="2" [hidden]="questionData.answer_options.length === 1">
+        <ion-checkbox [(ngModel)]="answerOption.chosen"></ion-checkbox>
+      </ion-col>
+
+      <ion-col size-lg="3" size-sm="6" size-xs="10">
+        <ion-text *ngIf="answerOption.text" class="ion-text-wrap">{{ answerOption.text }}</ion-text>
+      </ion-col>
+
+      <ion-col size-lg="3" size-sm="5" size-xs="12">
+        <ion-slides *ngIf="answerOption.images" [options]="sliderConfig" class="slidesResponsive" [pager]="answerOption.images.length > 1">
+          <ion-slide *ngFor="let img of answerOption.images">
+            <ion-card class="noHeader">
+              <ion-card-header></ion-card-header>
+              <ion-card-content>
+                <div class="swiper-zoom-container">
+                  <img [src]='img.resLocation'/>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-slide>
+        </ion-slides>
+      </ion-col>
+
+      <ion-col size-lg="5" size-sm="12" size-xs="12">
+        <ion-textarea class="txt-input" wrap="soft" autoGrow="True" [(ngModel)]="answerOption.answer" placeholder="weitere Erklärungen?"></ion-textarea>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+
+  <ion-button (click)="sendAnswer()" expand="block">OK</ion-button>
 </ion-content>

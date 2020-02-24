@@ -1,0 +1,12 @@
+ion-tab-bar {
+	--tab-bar-bg: var(--header-bg);
+	--ion-tab-bar-color: rgb(183, 218, 231);
+
+
+	--background: var(--tab-bar-bg);
+	--opacity: 85%;
+}
+
+ion-tab-button {
+	--color-selected: #fff;
+}

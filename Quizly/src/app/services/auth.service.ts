@@ -1,4 +1,4 @@
-import { Platform } from '@ionic/angular';
+import { Platform, AlertController } from '@ionic/angular';
 import { Injectable } from '@angular/core';
 
 import 'capacitor-secure-storage-plugin';
@@ -15,9 +15,10 @@ const key = 'auth-token';
 export class AuthService {
   authenticationState = new BehaviorSubject(false);
 
-  constructor(private plt: Platform) {
+  constructor(private plt: Platform,
+              private alertController: AlertController) {
     this.plt.ready().then(() => {
-      //this.checkToken();  // set this to be logged in directly
+      this.checkToken();  // set this to be logged in directly
     });
   }
 
@@ -50,10 +51,25 @@ export class AuthService {
     }).catch(err => {console.log(err); return false; });
   }
 
-  logout() {
-    return Storage.remove({ key }).then(() => {
-      this.authenticationState.next(false);
+  async logout() {
+    const alert = await this.alertController.create({
+      header: 'Logout?',
+      buttons: [
+        {
+          text: 'Nein',
+          cssClass: 'alert-quit'
+        }, {
+          text: 'Ja',
+          cssClass: 'alert-ok',
+          handler: async () => {
+            return Storage.remove({ key }).then(() => {
+              this.authenticationState.next(false);
+            });
+          }
+        }
+      ]
     });
+    await alert.present();
   }
 
   isAuthenticated() {

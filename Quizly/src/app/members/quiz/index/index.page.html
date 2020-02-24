@@ -1,9 +1,114 @@
 <ion-header>
+	<ion-toolbar *ngIf="headerExpanded">
+
+    <ion-buttons slot="start" class="ion-text-wrap ion-no-padding">
+      <ion-select placeholder="1. Ebene" interface="popover" (ionChange)="changed1stSelect()" [(ngModel)]="sectionFilter[0]">
+        <ion-select-option *ngFor="let option of sectionOptions" [value]="option.val">{{ option.name }}</ion-select-option>
+      </ion-select>
+
+      <ion-button disabled size="small" [class.header-level-order-select-hide]="sectionFilter[0] === null">
+        <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
+      </ion-button>
+
+      <ion-select placeholder="2. Ebene" interface="popover" (ionChange)="changed2ndSelect()" [(ngModel)]="sectionFilter[1]" [class.header-level-order-select-hide]="sectionFilter[0] === null">
+        <ion-select-option *ngFor="let option of sectionOptions2nd" [value]="option.val">{{ option.name }}</ion-select-option>
+      </ion-select>
+
+      <ion-button disabled size="small" [class.header-level-order-select-hide]="sectionFilter[1] === null" [class.btn-disabled]="!sectionOptions3rd.length">
+        <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
+      </ion-button>
+
+      <ion-select placeholder="3. Ebene" interface="popover" (ionChange)="changed3rdSelect()" [(ngModel)]="sectionFilter[2]" [class.header-level-order-select-hide]="sectionFilter[1] === null" [disabled]="!sectionOptions3rd.length">
+        <ion-select-option *ngFor="let option of sectionOptions3rd" [value]="option.val">{{ option.name }}</ion-select-option>
+      </ion-select>
+    </ion-buttons>
+	</ion-toolbar>
+
   <ion-toolbar>
-    <ion-title>index</ion-title>
+		<ion-buttons slot="start">
+			<ion-button *ngIf="headerExpanded" (click)="headerExpanded = !headerExpanded">
+				<ion-icon name="arrow-dropdown"></ion-icon>
+			</ion-button>
+
+			<ion-button *ngIf="!headerExpanded" (click)="headerExpanded = !headerExpanded">
+				<ion-icon name="arrow-dropright"></ion-icon>
+      </ion-button>
+      <ion-chip disabled>98 P. gesamt</ion-chip>
+		</ion-buttons>
+
+		<ion-buttons slot="end">
+      <ion-button *ngIf="chosenQuestions" fill="outline" [routerLink]="['/quiz/detail']" routerDirection="forward">
+        {{ chosenQuestions }} Frage/n. GO!
+      </ion-button>
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
+  <!-- Testing -->
+  <ion-grid><ion-row>
+      <ion-col size-xs="1" size-sm="3" size-md="5" size-lg="7" size-xl="9" style="border:solid"></ion-col>
+  </ion-row></ion-grid>
+  <ion-text [routerLink]="['/quiz/end']" routerDirection="forward" style="text-decoration:underline">Link</ion-text>
+
+
+  <div *ngIf="!data.length" padding><h2>
+    Glückwunsch, du hast keine ausstehenden Fragen mehr 🙂
+  </h2></div>
+
+  <div *ngIf="data.length">
+    <ion-list detail="false" class="accordeon-list">
+      <div *ngFor="let item of data; let i = index;">
+        <ion-item tappable class="accordeon-list-1st-level">
+          <ion-icon *ngIf="item.expanded && !item.chosen" slot="start" name="arrow-dropdown-circle"(click)="toggleExpanded1st(i)" ></ion-icon>
+          <ion-icon *ngIf="!item.expanded && !item.chosen" slot="start" name="arrow-dropright-circle"(click)="toggleExpanded1st(i)"></ion-icon>
+          <ion-label class="ion-text-wrap">{{ item.title }}</ion-label>
+
+          <ion-note slot="end">
+            <ion-chip>{{ item.openQuestions }}</ion-chip>
+          </ion-note>
+
+          <ion-checkbox [(ngModel)]="item.chosen" slot="end" (ionChange)="changedChosen1st(i)"></ion-checkbox>
+        </ion-item>
+
+        <div *ngIf="item.children.length && item.expanded && !item.chosen">
+          <ion-list detail="false" class="accordeon-child-list">
+            <div *ngFor="let child of item.children; let j = index;">
+              <ion-item tappable class="accordeon-list-2nd-level">
+                <ion-icon *ngIf="child.expanded && !child.chosen" slot="start" name="arrow-dropdown-circle" (click)="toggleExpanded2nd(i, j)"></ion-icon>
+                <ion-icon *ngIf="!child.expanded && !child.chosen" slot="start" name="arrow-dropright-circle" (click)="toggleExpanded2nd(i, j)"></ion-icon>
+                <ion-label class="ion-text-wrap">{{ child.title }}</ion-label>
+
+                <ion-note slot="end">
+                <ion-chip>{{ child.openQuestions }}</ion-chip>
+                </ion-note>
+
+                <ion-checkbox [(ngModel)]="child.chosen" slot="end" (ionChange)="changedChosen2nd(i, j)"></ion-checkbox>
+              </ion-item>
+
+              <div *ngIf="child.children.length && child.expanded && !child.chosen">
+                <ion-list detail="false" class="accordeon-child-list">
+                  <div *ngFor="let grandchild of child.children; let k = index;">
+                    <ion-item tappable class="accordeon-list-3rd-level">
+                      <ion-label class="ion-text-wrap">{{ grandchild.title }}</ion-label>
+
+                      <ion-note slot="end">
+                      <ion-chip>{{ grandchild.openQuestions }}</ion-chip>
+                      </ion-note>
+
+                      <ion-checkbox [(ngModel)]="grandchild.chosen" slot="end" (ionChange)="changedChosen3rd(i, j, k)"></ion-checkbox>
+                    </ion-item>
+                  </div>
+                </ion-list>
+              </div>
+            </div>
+          </ion-list>
+        </div>
+      </div>
+    </ion-list>
+  </div>
 </ion-content>

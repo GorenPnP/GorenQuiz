@@ -1,9 +1,27 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>end</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>🎉</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
+  <div class="flex-container">
+    <ion-text class="flex-section">
+      <h2>
+        Dankeschöösch! Phillip guckt dann mal drüber.
+        Ergebnisse sind <ion-text tappable [routerLink]="['/results/index']" routerDirection="forward" style="text-decoration: underline;">hier</ion-text> zu finden.
+      </h2>
+    </ion-text>
 
+    <div  class="flex-section">
+    <ion-button expand="block" [routerLink]="['/quiz/index']" routerDirection="forward" >
+      OK
+    </ion-button>
+    </div>
+  </div>
 </ion-content>

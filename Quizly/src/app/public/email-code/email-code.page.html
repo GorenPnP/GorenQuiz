@@ -4,10 +4,10 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
   <form>
     <ion-item>
-      <ion-label position="floating">Email Code <ion-text color="danger">*</ion-text></ion-label>
+      <ion-label position="floating">Email Code <ion-text class="field-required">*</ion-text></ion-label>
       <ion-input class="form-control" required="true" [(ngModel)]="code" name="code"></ion-input>
     </ion-item>
     <ion-button type="submit" expand="block" (click)="submit()">Login</ion-button>
