@@ -4,19 +4,24 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <form>
-    <ion-item>
-      <ion-label position="floating">Name <ion-text class="field-required">*</ion-text></ion-label>
-      <ion-input class="form-control" required="true" minlength=4 maxlength=50 [(ngModel)]="name" name="name"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Passwort <ion-text  class="field-required">*</ion-text></ion-label>
-      <ion-input class="form-control" required="true" minlength=8 maxlength=50 type="password" [(ngModel)]="password" name="password"></ion-input>
-    </ion-item>
+<ion-content>
+  <div class="flex-container-row" style="height: 100%;">
+    <div class="flex-container-col" style="width: 90%;">
+      <form>
+        <ion-item>
+          <ion-label position="floating">Name <ion-text class="field-required">*</ion-text></ion-label>
+          <ion-input class="form-control" required="true" minlength=4 maxlength=50 [(ngModel)]="name" name="name"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Passwort <ion-text  class="field-required">*</ion-text></ion-label>
+          <ion-input class="form-control" required="true" minlength=8 maxlength=50 type="password" [(ngModel)]="password" name="password"></ion-input>
+        </ion-item>
 
-    <ion-button type="submit" expand="block" (click)="submit()">Login</ion-button>
-  </form>
+        <ion-button type="submit" expand="block" (click)="submit()">Login</ion-button>
+      </form>
 
-  <ion-text tappable [routerLink]="['/signin']" routerDirection="forward" style="text-decoration:underline">Noch keinen Account?</ion-text>
+      <ion-text tappable [routerLink]="['/signin']" routerDirection="forward" style="text-decoration:underline">Noch keinen Account?</ion-text>
+
+    </div>
+  </div>
 </ion-content>

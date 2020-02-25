@@ -55,7 +55,12 @@
 		text-align: center;		// to center text in ion-title
 		 --background:var(--header-bg);
 	}
-	ion-toolbar ion-button {--opacity:80%;}
+	ion-toolbar * ion-button {
+		--opacity:80%;
+		--background:var(--header-bg);
+		--box-shadow: 0;
+		--border-color: var(--ion-text-color);
+	}
 	ion-toolbar ion-title {display: inline-block;}	// to center text in conjunction with 'ion-toolbar {text-align: center;}'
 
 
@@ -69,7 +74,7 @@
 	ion-card.noHeader ion-card-header {display: none}
 	ion-card.noHeader ion-card-content {padding-top: 13px}
 	ion-slides.slidesResponsive ion-slide {max-height: 25%}
-	ion-slides.slidesResponsive ion-slide img {height:auto; width: 100%; max-height:100%}
+	ion-slides.slidesResponsive * img {height:auto; width: 100%; max-height:100%}
 
 	.accordeon-list {}
 	.accordeon-list-1st-level {--background: var(--accordeon-list-1st-level--color);}
@@ -80,7 +85,7 @@
 	.alert-quit {color: var(--ion-color-danger);}
 	.alert-ok {color: var(--ion-color-success)}
 
-	.answer-tile {
+	.answer-tile, .file-transfer-tile {
 		box-shadow: var(--answer-tile-box-shadow);
 		margin-bottom: 10px;
 		//background-image:var(--answer-bg);
@@ -100,10 +105,31 @@
 
 	.field-required {color: var(--field-required-color);}
 
-	.header-level-order-select-hide {visibility: hidden;}
+	.file-transfer-tile ion-list-header {
+		font-weight: bold;
+		font-size: large;
+		padding-right: 10px;
+	}
+
+	.flex-container-col {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+	.flex-container-row {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+
+	.hide {display: none;}
 
 	.question-tile {
 		margin-bottom: 10px;
 		box-shadow: var(--question-tile-box-shadow);
+	}
+	.question-tile .question {
+		font-weight: bolder;
+		font-size: larger;
 	}
 }

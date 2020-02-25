@@ -9,7 +9,10 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./detail.page.scss'],
 })
 export class DetailPage implements OnInit {
-
+  currScore: number = 67;
+  maxScore: number = 153;
+  currQuestion: number = 1;
+  numQuestion: number = 1;
   questionData =
   {
     topic: 'Hello Topic',
@@ -44,6 +47,11 @@ export class DetailPage implements OnInit {
     ]
   };
 
+  files = [
+    {title: 'some pdf file'},
+    {title: 'rand.txt'}
+  ];
+
   /** config for the image slider */
   sliderConfig = {
     slidesPerView: 1.3,
@@ -63,6 +71,17 @@ export class DetailPage implements OnInit {
     if (this.questionData.answer_options.length === 1) {
       this.questionData.answer_options[0].chosen = true;
     }
+  }
+
+  async addFile() {
+    // TODO fill this + suitable service
+    console.log('should add file');
+  }
+
+  async deleteFile(index: number) {
+    // TODO fill this + suitable service
+    console.log(this.files[index], index);
+    this.files = this.files.filter((_, i) => i !== index);
   }
 
   sendAnswer() {

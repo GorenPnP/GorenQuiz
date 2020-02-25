@@ -1,6 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 
+
+import { Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
+import { Platform } from '@ionic/angular';
+
+const { Filesystem } = Plugins;
+
+
+
+export enum WindowSize {xs, sm, md, lg, xl}
+
 export interface QuizListEntry {
   title: string;
   currScore: number;
@@ -19,6 +29,9 @@ export interface QuizListEntry {
 })
 export class IndexPage implements OnInit {
   headerExpanded = false;
+  WindowSize = WindowSize;  // to use enum in template
+  winSize: WindowSize;
+
   chosenQuestions = 0;
   sectionFilter = [null, null, null];
 
@@ -28,10 +41,13 @@ export class IndexPage implements OnInit {
 
 
   // TODO this is dummy content. Replace later with API data
+  totalPoints: number = 10000;
+  openQuestionPoints: number = 77;
+  maxOpenQuestionPoints: number = 128;
   data: QuizListEntry[] = [
     {
       title: 'Geschichte',
-      currScore: 7,
+      currScore: 14,
       maxScore: 27,
       openQuestions: 4,
       expanded: false,
@@ -126,9 +142,13 @@ export class IndexPage implements OnInit {
   }
 ];
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,
+              private platform: Platform) {}
 
   ngOnInit() {
+    // get initial window size
+    this.platform.ready().then(_ => { this.windowSizeOnResize(null, this.platform.width()); });
+
     // TODO get initial this.sectionFilter from (local) db, then this.updateCategories() to retrieve accordion list
     this.updateCategories();
   }
@@ -205,8 +225,11 @@ export class IndexPage implements OnInit {
 
     // special case for last selector:
     // if topic and grade are chosen and only subject remains as choice, there is no point in sorting with this 3rd information.
-    console.log(this.sectionOptions3rd)
-    if (this.sectionOptions3rd.length === 1 && this.sectionOptions3rd[0].val === 'f') { this.sectionOptions3rd = []; }
+    // else: if both filters before are set, set this last one with the remaining choice
+    if (this.sectionOptions3rd.length === 1) {
+      if (this.sectionOptions3rd[0].val === 'f') { this.sectionOptions3rd = []; }
+      this.sectionFilter[2] = this.sectionOptions3rd.length ? this.sectionOptions3rd[0].val : null;
+    }
 
     this.updateCategories();
   }
@@ -217,8 +240,11 @@ export class IndexPage implements OnInit {
 
     // special case for last selector:
     // if topic and grade are chosen and only subject remains as choice, there is no point in sorting with this 3rd information.
-    console.log(this.sectionOptions3rd)
-    if (this.sectionOptions3rd.length === 1 && this.sectionOptions3rd[0].val === 'f') { this.sectionOptions3rd = []; }
+    // else: if both filters before are set, set this last one with the remaining choice
+    if (this.sectionOptions3rd.length === 1) {
+      if (this.sectionOptions3rd[0].val === 'f') { this.sectionOptions3rd = []; }
+      this.sectionFilter[2] = this.sectionOptions3rd.length ? this.sectionOptions3rd[0].val : null;
+    }
 
     this.updateCategories();
   }
@@ -232,7 +258,56 @@ export class IndexPage implements OnInit {
     // if all 3 null => one field with "checkbox | alle | curr P./max P. open_Questions"
   }
 
+  windowSizeOnResize(ev: any, width?: number) {
+    const innerWidth = ev ? ev.target.innerWidth : width;
+
+    if (innerWidth <= 575) { this.winSize = WindowSize.xs; return; }
+    if (innerWidth <= 767) { this.winSize = WindowSize.sm; return; }
+    if (innerWidth <= 991) { this.winSize = WindowSize.md; return; }
+    if (innerWidth <= 1199) { this.winSize = WindowSize.lg; return; }
+    this.winSize = WindowSize.xl;
+  }
+
   logout() {
     this.authService.logout();
+  }
+
+
+
+  /** testing file manipulation */
+   dir = FilesystemDirectory.Cache;
+   path = 'secrets/text.txt';
+
+  async testing() {
+    await this.readdir();
+    await this.fileAppend();
+    await this.readdir();
+    await this.fileRead();
+  }
+
+  async readdir() {
+    Filesystem.readdir({
+      path: '',
+      directory: this.dir
+    }).then(data => console.log(data))
+    .catch (e => console.error('Unable to read dir', e));
+  }
+
+  async fileAppend() {
+    await Filesystem.appendFile({
+      path: this.path,
+      data: "MORE TESTS",
+      directory: this.dir,
+      encoding: FilesystemEncoding.UTF8
+    });
+  }
+
+  async fileRead() {
+    const contents = await Filesystem.readFile({
+      path: this.path,
+      directory: this.dir,
+      encoding: FilesystemEncoding.UTF8
+    }).catch(e => {console.log(e); });
+    console.log(contents);
   }
 }

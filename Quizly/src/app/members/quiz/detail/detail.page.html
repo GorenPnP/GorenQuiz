@@ -1,5 +1,9 @@
 <ion-header>
   <ion-toolbar>
+
+    <ion-chip>{{ currScore | formatNumber }}/{{ maxScore | formatNumber }} P.</ion-chip>
+                  <ion-chip>Frage {{ currQuestion | formatNumber }}/{{ numQuestion |formatNumber }}</ion-chip>
+
     <ion-buttons slot="end">
       <ion-button (click)="goHome()">
         <ion-icon slot="icon-only" name="home"></ion-icon>
@@ -25,10 +29,10 @@
         <ion-text class="ion-text-wrap">Thema: </ion-text><ion-text class="ion-text-wrap">{{ questionData.topic }}</ion-text>
       </ion-col>
       <ion-col size-lg="1" size-sm="3" size-xs="6">
-        <ion-text class="ion-text-wrap">Bundle: </ion-text><ion-text class="ion-text-wrap">{{ questionData.bundle }}</ion-text>
+        <ion-text class="ion-text-wrap">Bundle: </ion-text><ion-text class="ion-text-wrap">{{ questionData.bundle | formatNumber }}</ion-text>
       </ion-col>
       <ion-col size-lg="1" size-sm="3" size-xs="6">
-        <ion-text class="ion-text-wrap">Punkte: </ion-text><ion-text class="ion-text-wrap">{{ questionData.points }}</ion-text>
+        <ion-text class="ion-text-wrap">Punkte: </ion-text><ion-text class="ion-text-wrap">{{ questionData.points | formatNumber }}</ion-text>
       </ion-col>
 
       <ion-col size-lg="3" size-sm="6" size-xs="12">
@@ -45,8 +49,10 @@
         </ion-slides>
       </ion-col>
 
-      <ion-col size-lg="5" size-sm="6" size-xs="12">
-        <ion-text class="ion-text-wrap">Frage: </ion-text><ion-text class="ion-text-wrap">{{ questionData.question.text }}</ion-text>
+      <ion-col size-lg="5" size-sm="6" size-xs="12" class="flex-container-col">
+        <div class="question flex-container-row">
+          <ion-text class="ion-text-wrap">{{ questionData.question.text }}</ion-text>
+        </div>
       </ion-col>
 
     </ion-row>
@@ -79,6 +85,30 @@
         <ion-textarea class="txt-input" wrap="soft" autoGrow="True" [(ngModel)]="answerOption.answer" placeholder="weitere Erklärungen?"></ion-textarea>
       </ion-col>
 
+    </ion-row>
+
+    <ion-row class="file-transfer-tile">
+      <ion-col size="12">
+        <ion-list class="ion-padding">
+          <ion-list-header>
+            <ion-label class="ion-text-wrap">Dateien</ion-label>
+            <ion-note>
+              <ion-button (click)="addFile()">
+                <ion-icon slot="icon-only" name="add"></ion-icon>
+              </ion-button>
+            </ion-note>
+          </ion-list-header>
+
+          <ion-item *ngFor="let file of files; let i = index" tappable>
+            <ion-label class="ion-text-wrap">{{ file.title }}</ion-label>
+            <ion-note>
+              <ion-button  (click)="deleteFile(i)">
+                <ion-icon slot="icon-only" name="trash"></ion-icon>
+              </ion-button>
+            </ion-note>
+          </ion-item>
+        </ion-list>
+      </ion-col>
     </ion-row>
   </ion-grid>
 

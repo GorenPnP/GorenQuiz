@@ -9,19 +9,21 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <div class="flex-container">
-    <ion-text class="flex-section">
+<ion-content class="ion-padding">
+  <div class="flex-container-row" style="height:100%">
+    <div class="flex-container-col">
+    <ion-text>
       <h2>
         Dankeschöösch! Phillip guckt dann mal drüber.
         Ergebnisse sind <ion-text tappable [routerLink]="['/results/index']" routerDirection="forward" style="text-decoration: underline;">hier</ion-text> zu finden.
       </h2>
     </ion-text>
 
-    <div  class="flex-section">
+    <div>
     <ion-button expand="block" [routerLink]="['/quiz/index']" routerDirection="forward" >
       OK
     </ion-button>
+    </div>
     </div>
   </div>
 </ion-content>
