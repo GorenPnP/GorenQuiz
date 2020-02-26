@@ -1,14 +1,158 @@
 <ion-header>
+	<ion-toolbar *ngIf="headerExpanded">
+
+    <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-select placeholder="1. Ebene" interface="popover" (ionChange)="changedSelect(1)" [(ngModel)]="sectionFilter[0]">
+              <ion-select-option *ngFor="let option of sectionOptions" [value]="option.val">{{ option.name }}</ion-select-option>
+            </ion-select>
+          </ion-col>
+
+        <ion-col>
+          <ion-button disabled size="small" [class.hide]="sectionFilter[0] === null">
+            <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
+          </ion-button>
+        </ion-col>
+
+        <ion-col>
+          <ion-select placeholder="2. Ebene" interface="popover" (ionChange)="changedSelect(2)" [(ngModel)]="sectionFilter[1]" [class.hide]="sectionFilter[0] === null">
+            <ion-select-option *ngFor="let option of sectionOptions2nd" [value]="option.val">{{ option.name }}</ion-select-option>
+          </ion-select>
+        </ion-col>
+
+        <ion-col>
+          <ion-button disabled size="small" [class.hide]="sectionFilter[1] === null" [class.btn-disabled]="!sectionOptions3rd.length">
+            <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
+          </ion-button>
+        </ion-col>
+
+        <ion-col>
+          <ion-select placeholder="3. Ebene" interface="popover" (ionChange)="changedSelect(3)" [(ngModel)]="sectionFilter[2]" [class.hide]="sectionFilter[1] === null" [disabled]="!sectionOptions3rd.length">
+            <ion-select-option *ngFor="let option of sectionOptions3rd" [value]="option.val">{{ option.name }}</ion-select-option>
+          </ion-select>
+        </ion-col>
+        </ion-row>
+
+      <ion-row>
+        <ion-col size-sm="2.5" [class.hide]="winSize > WindowSize.xs">
+          <ion-chip disabled>{{ totalPoints | formatNumber }} P. gesamt</ion-chip>
+        </ion-col>
+
+        <ion-col size-sm="2.5" [class.hide]="winSize > WindowSize.xs">
+          <ion-chip disabled>{{ openQuestionPoints | formatNumber }}/{{ maxOpenQuestionPoints | formatNumber }} P. erreicht</ion-chip>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+	</ion-toolbar>
+
   <ion-toolbar>
-    <ion-buttons slot="end">
-      <ion-button (click)="logout()">
-        <ion-icon slot="icon-only" name="log-out"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>Ergebnisse</ion-title>
+    <ion-grid fixed style="margin: 0; padding: 0; width: 100%;">
+      <ion-row>
+        <ion-col size-xs="3" size-sm="1.5">
+          <ion-button *ngIf="headerExpanded" (click)="headerExpanded = !headerExpanded">
+            <ion-icon name="arrow-dropdown"></ion-icon>
+          </ion-button>
+
+          <ion-button *ngIf="!headerExpanded" (click)="headerExpanded = !headerExpanded">
+            <ion-icon name="arrow-dropright"></ion-icon>
+          </ion-button>
+        </ion-col>
+
+        <ion-col size-sm="2.5" [class.hide]="winSize === WindowSize.xs">
+          <ion-chip disabled>{{ totalPoints | formatNumber }} P. gesamt</ion-chip>
+        </ion-col>
+
+        <ion-col size-sm="2.5" [class.hide]="winSize === WindowSize.xs">
+          <ion-chip disabled>{{ openQuestionPoints | formatNumber }}/{{ maxOpenQuestionPoints | formatNumber }} P. erreicht</ion-chip>
+        </ion-col>
+
+        <ion-col size-xs="6" size-sm="4">
+          <ion-button *ngIf="chosenQuestions" fill="outline" [routerLink]="['/quiz/detail']" routerDirection="forward">
+            {{ chosenQuestions | formatNumber }} Frage/n. GO!
+          </ion-button>
+        </ion-col>
+
+        <ion-col size-xs="3" size-sm="1.5">
+          <ion-button (click)="logout()">
+            <ion-icon slot="icon-only" name="log-out"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content (window:resize)="windowSizeOnResize($event)">
 
+  <div  *ngIf="!data.length" class="flex-container-row" style="height:100%">
+    <div class="flex-container-col">
+      <h2>Du hast keine Korrekturen mehr zum Ansehen 🙂</h2>
+    </div>
+  </div>
+
+  <div *ngIf="data.length">
+    <ion-list detail="false" class="accordeon-list">
+      <div *ngFor="let item of data; let i = index;">
+        <ion-item tappable class="accordeon-list-1st-level" (click)="toggleExpanded1st(i)">
+          <ion-icon *ngIf="item.expanded" slot="start" name="arrow-dropdown-circle"></ion-icon>
+          <ion-icon *ngIf="!item.expanded" slot="start" name="arrow-dropright-circle"></ion-icon>
+          <ion-label class="ion-text-wrap">{{ item.title }}</ion-label>
+
+          <ion-note slot="end">
+            <ion-chip [class.correctAnswer]="item.currScore >= item.maxScore">{{ item.currScore | formatNumber }}/{{ item.maxScore | formatNumber }} P.</ion-chip>
+            <ion-chip>{{ item.openQuestions | formatNumber }}</ion-chip>
+          </ion-note>
+        </ion-item>
+
+        <div *ngIf="item.children.length && item.expanded">
+          <ion-list detail="false" class="accordeon-child-list">
+            <div *ngFor="let child of item.children; let j = index;">
+              <ion-item tappable class="accordeon-list-2nd-level" (click)="toggleExpanded2nd(i, j)">
+                <ion-icon *ngIf="child.expanded" slot="start" name="arrow-dropdown-circle"></ion-icon>
+                <ion-icon *ngIf="!child.expanded" slot="start" name="arrow-dropright-circle"></ion-icon>
+                <ion-label class="ion-text-wrap">{{ child.title }}</ion-label>
+
+                <ion-note slot="end">
+                  <ion-chip [class.correctAnswer]="child.currScore >= child.maxScore">{{ child.currScore | formatNumber }}/{{ child.maxScore | formatNumber }} P.</ion-chip>
+                  <ion-chip>{{ child.openQuestions | formatNumber }}</ion-chip>
+                </ion-note>
+              </ion-item>
+
+              <div *ngIf="child.children.length && child.expanded">
+                <ion-list detail="false" class="accordeon-child-list">
+                  <div *ngFor="let grandchild of child.children; let k = index;">
+                    <ion-item tappable class="accordeon-list-3rd-level" (click)="toggleExpanded3rd(i, j, k)">
+                      <ion-icon *ngIf="grandchild.expanded" slot="start" name="arrow-dropdown-circle"></ion-icon>
+                      <ion-icon *ngIf="!grandchild.expanded" slot="start" name="arrow-dropright-circle"></ion-icon>
+                      <ion-label class="ion-text-wrap">{{ grandchild.title }}</ion-label>
+
+                      <ion-note slot="end">
+                        <ion-chip [class.correctAnswer]="grandchild.currScore >= grandchild.maxScore">{{ grandchild.currScore | formatNumber }}/{{ grandchild.maxScore | formatNumber }} P.</ion-chip>
+                      <ion-chip>{{ grandchild.openQuestions | formatNumber }}</ion-chip>
+                      </ion-note>
+                    </ion-item>
+
+                    <div *ngIf="grandchild.children.length && grandchild.expanded">
+                      <ion-list detail="true" class="accordeon-child-list">
+                        <div *ngFor="let question of grandchild.children; let l = index;">
+                          <ion-item tappable class="accordeon-list-4th-level" [routerLink]="['/results/detail', question.id]" routerDirection="forward">
+                            <ion-label class="ion-text-wrap">{{ question.title }}</ion-label>
+
+                            <ion-note slot="end">
+                              <ion-chip [class.correctAnswer]="question.currScore >= question.maxScore">{{ question.currScore | formatNumber }}/{{ question.maxScore | formatNumber }} P.</ion-chip>
+                            </ion-note>
+                          </ion-item>
+                        </div>
+                      </ion-list>
+                    </div>
+                  </div>
+                </ion-list>
+              </div>
+            </div>
+          </ion-list>
+        </div>
+      </div>
+    </ion-list>
+  </div>
 </ion-content>

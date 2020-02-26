@@ -9,7 +9,7 @@ const routes: Routes = [
       import('./tabs/tabs.module').then(m => m.TabsPageModule)
   },
   {
-    path: 'results/detail',
+    path: 'results/detail/:id',
     loadChildren: () =>
       import('./results/detail/detail.module').then(
         m => m.DetailPageModule

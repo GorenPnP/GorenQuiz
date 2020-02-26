@@ -103,6 +103,8 @@
 		box-shadow: var(--answer-element-box-shadow);
 	}
 
+	.correctAnswer {--background: var(--ion-color-success);}
+
 	.field-required {color: var(--field-required-color);}
 
 	.file-transfer-tile ion-list-header {

@@ -4,7 +4,7 @@
     <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-select placeholder="1. Ebene" interface="popover" (ionChange)="changed1stSelect()" [(ngModel)]="sectionFilter[0]">
+            <ion-select placeholder="1. Ebene" interface="popover" (ionChange)="changedSelect(1)" [(ngModel)]="sectionFilter[0]">
               <ion-select-option *ngFor="let option of sectionOptions" [value]="option.val">{{ option.name }}</ion-select-option>
             </ion-select>
           </ion-col>
@@ -16,7 +16,7 @@
         </ion-col>
 
         <ion-col>
-          <ion-select placeholder="2. Ebene" interface="popover" (ionChange)="changed2ndSelect()" [(ngModel)]="sectionFilter[1]" [class.hide]="sectionFilter[0] === null">
+          <ion-select placeholder="2. Ebene" interface="popover" (ionChange)="changedSelect(2)" [(ngModel)]="sectionFilter[1]" [class.hide]="sectionFilter[0] === null">
             <ion-select-option *ngFor="let option of sectionOptions2nd" [value]="option.val">{{ option.name }}</ion-select-option>
           </ion-select>
         </ion-col>
@@ -28,7 +28,7 @@
         </ion-col>
 
         <ion-col>
-          <ion-select placeholder="3. Ebene" interface="popover" (ionChange)="changed3rdSelect()" [(ngModel)]="sectionFilter[2]" [class.hide]="sectionFilter[1] === null" [disabled]="!sectionOptions3rd.length">
+          <ion-select placeholder="3. Ebene" interface="popover" (ionChange)="changedSelect(3)" [(ngModel)]="sectionFilter[2]" [class.hide]="sectionFilter[1] === null" [disabled]="!sectionOptions3rd.length">
             <ion-select-option *ngFor="let option of sectionOptions3rd" [value]="option.val">{{ option.name }}</ion-select-option>
           </ion-select>
         </ion-col>
@@ -98,9 +98,12 @@
   <ion-button (click)="readdir()">dir read</ion-button>
   <ion-button (click)="testing()">testing</ion-button>
 -->
-  <div *ngIf="!data.length" padding><h2>
-    Glückwunsch, du hast keine ausstehenden Fragen mehr 🙂
-  </h2></div>
+
+  <div *ngIf="!data.length" class="flex-container-row" style="height:100%">
+      <div class="flex-container-col">
+        <h2>Glückwunsch, du hast keine ausstehenden Fragen mehr 🙂</h2>
+      </div>
+  </div>
 
   <div *ngIf="data.length">
     <ion-list detail="false" class="accordeon-list">
