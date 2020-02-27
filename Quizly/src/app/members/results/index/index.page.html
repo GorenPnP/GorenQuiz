@@ -94,7 +94,7 @@
   <div *ngIf="data.length">
     <ion-list detail="false" class="accordeon-list">
       <div *ngFor="let item of data; let i = index;">
-        <ion-item tappable class="accordeon-list-1st-level" (click)="toggleExpanded1st(i)">
+        <ion-item tappable class="accordeon-list-1st-level" (click)="toggleExpanded(i)">
           <ion-icon *ngIf="item.expanded" slot="start" name="arrow-dropdown-circle"></ion-icon>
           <ion-icon *ngIf="!item.expanded" slot="start" name="arrow-dropright-circle"></ion-icon>
           <ion-label class="ion-text-wrap">{{ item.title }}</ion-label>
@@ -108,7 +108,7 @@
         <div *ngIf="item.children.length && item.expanded">
           <ion-list detail="false" class="accordeon-child-list">
             <div *ngFor="let child of item.children; let j = index;">
-              <ion-item tappable class="accordeon-list-2nd-level" (click)="toggleExpanded2nd(i, j)">
+              <ion-item tappable class="accordeon-list-2nd-level" (click)="toggleExpanded(i, j)">
                 <ion-icon *ngIf="child.expanded" slot="start" name="arrow-dropdown-circle"></ion-icon>
                 <ion-icon *ngIf="!child.expanded" slot="start" name="arrow-dropright-circle"></ion-icon>
                 <ion-label class="ion-text-wrap">{{ child.title }}</ion-label>
@@ -122,7 +122,7 @@
               <div *ngIf="child.children.length && child.expanded">
                 <ion-list detail="false" class="accordeon-child-list">
                   <div *ngFor="let grandchild of child.children; let k = index;">
-                    <ion-item tappable class="accordeon-list-3rd-level" (click)="toggleExpanded3rd(i, j, k)">
+                    <ion-item tappable class="accordeon-list-3rd-level" (click)="toggleExpanded(i, j, k)">
                       <ion-icon *ngIf="grandchild.expanded" slot="start" name="arrow-dropdown-circle"></ion-icon>
                       <ion-icon *ngIf="!grandchild.expanded" slot="start" name="arrow-dropright-circle"></ion-icon>
                       <ion-label class="ion-text-wrap">{{ grandchild.title }}</ion-label>

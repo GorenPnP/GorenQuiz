@@ -108,9 +108,9 @@
   <div *ngIf="data.length">
     <ion-list detail="false" class="accordeon-list">
       <div *ngFor="let item of data; let i = index;">
-        <ion-item tappable class="accordeon-list-1st-level">
-          <ion-icon *ngIf="item.expanded && !item.chosen" slot="start" name="arrow-dropdown-circle"(click)="toggleExpanded1st(i)" ></ion-icon>
-          <ion-icon *ngIf="!item.expanded && !item.chosen" slot="start" name="arrow-dropright-circle"(click)="toggleExpanded1st(i)"></ion-icon>
+        <ion-item tappable class="accordeon-list-1st-level" (click)="toggleExpanded(i)">
+          <ion-icon *ngIf="item.expanded && !item.chosen" slot="start" name="arrow-dropdown-circle"></ion-icon>
+          <ion-icon *ngIf="!item.expanded && !item.chosen" slot="start" name="arrow-dropright-circle"></ion-icon>
           <ion-label class="ion-text-wrap">{{ item.title }}</ion-label>
 
           <ion-note slot="end">
@@ -118,15 +118,15 @@
             <ion-chip>{{ item.openQuestions | formatNumber }}</ion-chip>
           </ion-note>
 
-          <ion-checkbox [(ngModel)]="item.chosen" slot="end" (ionChange)="changedChosen1st(i)"></ion-checkbox>
+          <ion-checkbox [(ngModel)]="item.chosen" slot="end" (ionChange)="changedChosen(i)"></ion-checkbox>
         </ion-item>
 
         <div *ngIf="item.children.length && item.expanded && !item.chosen">
           <ion-list detail="false" class="accordeon-child-list">
             <div *ngFor="let child of item.children; let j = index;">
-              <ion-item tappable class="accordeon-list-2nd-level">
-                <ion-icon *ngIf="child.expanded && !child.chosen" slot="start" name="arrow-dropdown-circle" (click)="toggleExpanded2nd(i, j)"></ion-icon>
-                <ion-icon *ngIf="!child.expanded && !child.chosen" slot="start" name="arrow-dropright-circle" (click)="toggleExpanded2nd(i, j)"></ion-icon>
+              <ion-item tappable class="accordeon-list-2nd-level" (click)="toggleExpanded(i, j)">
+                <ion-icon *ngIf="child.expanded && !child.chosen" slot="start" name="arrow-dropdown-circle"></ion-icon>
+                <ion-icon *ngIf="!child.expanded && !child.chosen" slot="start" name="arrow-dropright-circle"></ion-icon>
                 <ion-label class="ion-text-wrap">{{ child.title }}</ion-label>
 
                 <ion-note slot="end">
@@ -134,7 +134,7 @@
                   <ion-chip>{{ child.openQuestions | formatNumber }}</ion-chip>
                 </ion-note>
 
-                <ion-checkbox [(ngModel)]="child.chosen" slot="end" (ionChange)="changedChosen2nd(i, j)"></ion-checkbox>
+                <ion-checkbox [(ngModel)]="child.chosen" slot="end" (ionChange)="changedChosen(i, j)"></ion-checkbox>
               </ion-item>
 
               <div *ngIf="child.children.length && child.expanded && !child.chosen">
@@ -148,7 +148,7 @@
                       <ion-chip>{{ grandchild.openQuestions | formatNumber }}</ion-chip>
                       </ion-note>
 
-                      <ion-checkbox [(ngModel)]="grandchild.chosen" slot="end" (ionChange)="changedChosen3rd(i, j, k)"></ion-checkbox>
+                      <ion-checkbox [(ngModel)]="grandchild.chosen" slot="end" (ionChange)="changedChosen(i, j, k)"></ion-checkbox>
                     </ion-item>
                   </div>
                 </ion-list>

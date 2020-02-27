@@ -3,6 +3,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FlexSizeService, WindowSize } from 'src/app/services/flex-size.service';
 import { Platform } from '@ionic/angular';
 import { LevelSelectorService } from 'src/app/services/level-selector.service';
+import { AccordeonService } from 'src/app/services/accordeon.service';
 
 export interface SolutionListEntry {
   title: string;
@@ -180,6 +181,7 @@ export class IndexPage implements OnInit {
     private authService: AuthService,
     private flexSizeService: FlexSizeService,
     private levelSelector: LevelSelectorService,
+    private accordeon: AccordeonService,
     private platform: Platform
   ) {}
 
@@ -206,50 +208,17 @@ export class IndexPage implements OnInit {
     this.levelSelector.updateCategories();
   }
 
-  toggleExpanded1st(i: number) {
-    this.data[i].expanded = !this.data[i].expanded;
+  toggleExpanded(...indices: number[]) {
+    const index: number = indices.pop();
+    let parent: any = null;
+    indices.forEach(i => { parent = parent === null ? this.data[i] : parent.children[i]; });
 
-    this.data
-      .filter((_, itemIndex) => itemIndex !== i)
-      .map(item => {
-        item.expanded = false;
-        item.children.map(child => {
-          child.expanded = false;
-          child.children.map(grandchild => (grandchild.expanded = false));
-        });
-      });
-  }
-
-  toggleExpanded2nd(i: number, j: number) {
-    this.data[i].children[j].expanded = !this.data[i].children[j].expanded;
-
-    this.data[i].children
-      .filter((_, itemIndex) => itemIndex !== j)
-      .map(item => (item.expanded = false));
-  }
-
-  toggleExpanded3rd(i: number, j: number, k: number) {
-    this.data[i].children[j].children[k].expanded = !this.data[i].children[j]
-      .children[k].expanded;
-
-    this.data[i].children[j].children
-      .filter((_, itemIndex) => itemIndex !== k)
-      .map(item => (item.expanded = false));
+    // service works on this.data directly (shallow copy with parent instance)
+    this.accordeon.toggleExpanded(parent === null ? this.data : parent.children, index);
   }
 
   changedSelect(level: number) {
-    switch (level) {
-      case 1:
-        this.levelSelector.changed1stSelect();
-        break;
-      case 2:
-        this.levelSelector.changed2ndSelect();
-        break;
-      case 3:
-        this.levelSelector.changed3rdSelect();
-        break;
-      default:
-    }
+    this.levelSelector.changedSelect(level);
   }
 
   windowSizeOnResize(ev: any, width?: number) {

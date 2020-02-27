@@ -7,83 +7,51 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class LevelSelectorService {
 
   sectionFilter = [null, null, null];
-
-  sectionOptions = [
-    { val: 'f', name: 'Fach' },
-    { val: 't', name: 'Thema' },
-    { val: 'k', name: 'Klasse' }
-  ];
-  sectionOptions2nd = JSON.parse(JSON.stringify(this.sectionOptions)); // deep copy
-  sectionOptions3rd = JSON.parse(JSON.stringify(this.sectionOptions)); // deep copy
+  sectionOptions: any[] = [];
 
   changedValues: BehaviorSubject<any> = new BehaviorSubject(null);
 
-  constructor() {}
+  constructor() {
+    const defaultOption = [{ val: 'f', name: 'Fach' }, { val: 't', name: 'Thema' }, { val: 'k', name: 'Klasse' }];
+    for (let i = 0; i < 3; i++) { this.sectionOptions[i] = defaultOption; }
+  }
 
   changedSubscription(): Observable<any> {
     return this.changedValues.asObservable();
   }
 
-  getFilterAndOptions() {
-    return [this.sectionFilter, this.sectionOptions, this.sectionOptions2nd, this.sectionOptions3rd];
+  getFilterAndOptions(): any[] {
+    return [this.sectionFilter, ...this.sectionOptions];
   }
 
-  changed1stSelect() {
-    this.sectionOptions2nd = this.sectionOptions.filter(
-      section => section.val !== this.sectionFilter[0]
-    );
-    this.sectionOptions3rd = this.sectionOptions.filter(
-      section =>
-        section.val !== this.sectionFilter[0] &&
-        section.val !== this.sectionFilter[1]
-    );
+  changedSelect(level: number) {
 
-    if (this.sectionFilter[0] === this.sectionFilter[1]) {
-      this.sectionFilter[1] = null;
-    }
-    if (this.sectionFilter[0] === this.sectionFilter[2]) {
-      this.sectionFilter[2] = null;
-    }
+    // get levels with lower priority than the changed one
+    this.sectionOptions.forEach((option: any[], index: number) => {
+      if (index + 1 > level) {
 
-    // special case for last selector:
-    // if topic and grade are chosen and only subject remains as choice, there is no point in sorting with this 3rd information.
-    // else: if both filters before are set, set this last one with the remaining choice
-    if (this.sectionOptions3rd.length === 1) {
-      if (this.sectionOptions3rd[0].val === 'f') {
-        this.sectionOptions3rd = [];
+        // set new array for an option with all those values uncovered by previous options (with a smaller index)
+        option = this.sectionOptions[0].filter(section => {
+          return this.sectionFilter.slice(0, index + 1).indexOf(section.val) === -1;
+        });
+
+        // special case for last selector:
+        // if topic and grade are chosen and only subject remains as choice, there is no point in sorting with this 3rd information.
+        // else: if both filters before are set, set this last one with the remaining choice
+        if (index === 2 && option.length === 1) {
+          if (option[0].val === 'f') { option = []; this.sectionFilter[2] = null; }
+          else { this.sectionFilter[2] = option[0].val; }
+        }
+        // sectionOptions does not adapt changes, set them here manually
+        this.sectionOptions[index] = option;
       }
-      this.sectionFilter[2] = this.sectionOptions3rd.length
-        ? this.sectionOptions3rd[0].val
-        : null;
-    }
+    });
 
-    this.updateCategories();
-  }
+    this.sectionFilter.forEach((value: string, index: number) => {
+      // sectionFilter would not adapt changes of its vals, so change them manually
+      if (this.sectionFilter.slice(0, index).indexOf(value) !== -1) { this.sectionFilter[index] = null; }
+    });
 
-  changed2ndSelect() {
-    this.sectionOptions3rd = this.sectionOptions2nd.filter(
-      section => section.val !== this.sectionFilter[1]
-    );
-    if (this.sectionFilter[1] === this.sectionFilter[2]) {
-      this.sectionFilter[2] = null;
-    }
-
-    // special case for last selector:
-    // if topic and grade are chosen and only subject remains as choice, there is no point in sorting with this 3rd information.
-    // else: if both filters before are set, set this last one with the remaining choice
-    if (this.sectionOptions3rd.length === 1) {
-      if (this.sectionOptions3rd[0].val === 'f') {
-        this.sectionOptions3rd = [];
-      }
-      this.sectionFilter[2] = this.sectionOptions3rd.length
-        ? this.sectionOptions3rd[0].val
-        : null;
-    }
-
-    this.updateCategories();
-  }
-
-  changed3rdSelect() {
     this.updateCategories();
   }
 

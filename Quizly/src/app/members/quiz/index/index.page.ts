@@ -8,6 +8,7 @@ import { FlexSizeService, WindowSize } from 'src/app/services/flex-size.service'
 import { Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
 import { Platform } from '@ionic/angular';
 import { LevelSelectorService } from 'src/app/services/level-selector.service';
+import { AccordeonService } from 'src/app/services/accordeon.service';
 
 const { Filesystem } = Plugins;
 
@@ -91,7 +92,7 @@ export class IndexPage implements OnInit {
           chosen: false,
           children: [
             {
-              title: "Klasse 3",
+              title: "Klasse 3 II",
               currScore: 4,
               maxScore: 12,
               openQuestions: 1,
@@ -100,7 +101,7 @@ export class IndexPage implements OnInit {
               children: []
             },
             {
-              title: "Klasse 4",
+              title: "Klasse 4 II",
               currScore: 3,
               maxScore: 15,
               openQuestions: 3,
@@ -148,6 +149,7 @@ export class IndexPage implements OnInit {
     private authService: AuthService,
     private flexSizeService: FlexSizeService,
     private levelSelector: LevelSelectorService,
+    private accordeon: AccordeonService,
     private platform: Platform
   ) {}
 
@@ -162,12 +164,8 @@ export class IndexPage implements OnInit {
       .subscribe(size => (this.winSize = size));
 
     this.levelSelector.changedSubscription().subscribe(_ => {
-      const data = this.levelSelector.getFilterAndOptions();
-
-      this.sectionFilter = data[0];
-      this.sectionOptions = data[1];
-      this.sectionOptions2nd = data[2];
-      this.sectionOptions3rd = data[3];
+      [this.sectionFilter, this.sectionOptions, this.sectionOptions2nd, this.sectionOptions3rd]
+        = this.levelSelector.getFilterAndOptions();
     });
 
     // TODO get initial this.sectionFilter from (local) db, then this.updateCategories() to retrieve accordion list
@@ -175,98 +173,29 @@ export class IndexPage implements OnInit {
   }
 
   changedSelect(level: number) {
-    switch (level) {
-      case 1:
-        this.levelSelector.changed1stSelect();
-        break;
-      case 2:
-        this.levelSelector.changed2ndSelect();
-        break;
-      case 3:
-        this.levelSelector.changed3rdSelect();
-        break;
-      default:
-    }
+    this.levelSelector.changedSelect(level);
   }
 
-  toggleExpanded1st(i: number) {
-    this.data[i].expanded = !this.data[i].expanded;
+  toggleExpanded(...indices: number[]) {
+    const index: number = indices.pop();
+    let parent: any = null;
+    indices.forEach(i => { parent = parent === null ? this.data[i] : parent.children[i]; });
 
-    this.data
-      .filter((_, itemIndex) => itemIndex !== i)
-      .map(item => {
-        item.expanded = false;
-        item.children.map(child => {
-          child.expanded = false;
-          child.children.map(grandchild => (grandchild.expanded = false));
-        });
-      });
+    // service works on this.data directly (shallow copy with parent instance)
+    this.accordeon.toggleExpanded(parent === null ? this.data : parent.children, index);
   }
 
-  toggleExpanded2nd(i: number, j: number) {
-    this.data[i].children[j].expanded = !this.data[i].children[j].expanded;
+  changedChosen(...indices: number[]) {
 
-    this.data[i].children
-      .filter((_, itemIndex) => itemIndex !== j)
-      .map(item => (item.expanded = false));
+    indices.pop();
+    let parent: any = null;
+    indices.forEach(index => { parent = parent === null ? this.data[index] : parent.children[index]; });
+
+    // service works on this.data directly (shallow copy with parent instance)
+    this.accordeon.changedChosen(parent);
+    this.chosenQuestions = this.accordeon.calcSelectedNum(this.data);
   }
 
-  changedChosen1st(i: number) {
-    this.calcSelectedNum();
-  }
-
-  changedChosen2nd(i: number, j: number) {
-    const parent = this.data[i];
-    if (parent.children.every(child => child.chosen)) {
-      parent.children.map(child => {
-        child.chosen = false;
-        child.expanded = false;
-      });
-      parent.chosen = true;
-    }
-
-    this.calcSelectedNum();
-  }
-
-  changedChosen3rd(i: number, j: number, k: number) {
-    const parent = this.data[i].children[j];
-    if (parent.children.every(child => child.chosen)) {
-      parent.children.map(child => {
-        child.chosen = false;
-        child.expanded = false;
-      });
-      parent.chosen = true;
-    }
-
-    this.calcSelectedNum();
-  }
-
-  calcSelectedNum() {
-    let sum = 0;
-    this.data
-      .filter(item => item.chosen)
-      .map(item => (sum += item.openQuestions));
-    this.data
-      .filter(item => !item.chosen)
-      .map(item =>
-        item.children
-          .filter(child => child.chosen)
-          .map(child => (sum += child.openQuestions))
-      );
-
-    this.data
-      .filter(item => !item.chosen)
-      .map(item =>
-        item.children
-          .filter(child => !child.chosen)
-          .map(child =>
-            child.children
-              .filter(grandchild => grandchild.chosen)
-              .map(grandchild => (sum += grandchild.openQuestions))
-          )
-      );
-    this.chosenQuestions = sum;
-  }
 
   windowSizeOnResize(ev: any, width?: number) {
     this.flexSizeService.adaptSize(ev, width);
