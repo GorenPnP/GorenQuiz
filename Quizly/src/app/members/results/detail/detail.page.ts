@@ -83,10 +83,6 @@ export class DetailPage implements OnInit {
     this.authService.logout();
   }
 
-  goHome() {
-    this.alert.goHome('/results/index');
-  }
-
   returnHome() {
     // TODO delete this question from review pile
 
