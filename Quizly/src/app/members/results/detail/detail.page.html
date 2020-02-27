@@ -56,9 +56,9 @@
 
     </ion-row>
 
-    <ion-row *ngFor="let answerOption of questionData.answer_options" class="answer-tile">
+    <ion-row *ngFor="let answerOption of questionData.answer_options" class="answer-tile" [ngClass]="{'right-answer': answerOption.correct, 'wrong-answer': !answerOption.correct}">
       <ion-col size-sm="1" size-xs="2" [hidden]="questionData.answer_options.length === 1">
-        <ion-checkbox [(ngModel)]="answerOption.chosen"></ion-checkbox>
+        <ion-checkbox [(ngModel)]="answerOption.chosen" disabled="true"></ion-checkbox>
       </ion-col>
 
       <ion-col size-lg="3" size-sm="6" size-xs="10">
@@ -81,9 +81,15 @@
       </ion-col>
 
       <ion-col size-lg="5" size-sm="12" size-xs="12">
-        <ion-textarea class="txt-input" wrap="soft" autoGrow="True" [(ngModel)]="answerOption.answer" placeholder="weitere Erklärungen?"></ion-textarea>
+        <div *ngIf="answerOption.answer">
+          <ion-label position="floating">Antwort</ion-label>
+          <ion-textarea class="txt-input" wrap="soft" autoGrow="True" [(ngModel)]="answerOption.answer" disabled="true"></ion-textarea>
+        </div>
+        <div *ngIf="answerOption.correction">
+          <ion-label position="floating">Korrektur</ion-label>
+          <ion-textarea class="txt-input" wrap="soft" autoGrow="True" [(ngModel)]="answerOption.correction" disabled="true"></ion-textarea>
+        </div>
       </ion-col>
-
     </ion-row>
 
     <ion-row class="file-transfer-tile">
@@ -94,6 +100,20 @@
           </ion-list-header>
 
           <ion-item *ngFor="let file of files; let i = index" tappable>
+            <ion-label class="ion-text-wrap">{{ file.title }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="file-transfer-tile">
+      <ion-col size="12">
+        <ion-list class="ion-padding">
+          <ion-list-header>
+            <ion-label class="ion-text-wrap">Dateien der Korrektur</ion-label>
+          </ion-list-header>
+
+          <ion-item *ngFor="let file of correctionFiles; let i = index" tappable>
             <ion-label class="ion-text-wrap">{{ file.title }}</ion-label>
           </ion-item>
         </ion-list>

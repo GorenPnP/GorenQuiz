@@ -28,8 +28,10 @@ export class DetailPage implements OnInit {
       {
         text: 'option 1',
         images: [],
-        chosen: false,
-        answer: null
+        chosen: true,
+        correct: false,
+        answer: null,
+        correction: 'mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm'
       },
       {
         text:
@@ -39,12 +41,15 @@ export class DetailPage implements OnInit {
           //          { resLocation: 'assets/Pokédex-Skin_Cheren.png' },
         ],
         chosen: false,
-        answer: null
+        correct: true,
+        answer: 'this is a given answer to a veeeeeeeeeery difficult problem concerning berry colors.',
+        correction: 'no, its about the planets SUPER 6'
       }
     ]
   };
 
   files = [{ title: 'some pdf file' }, { title: 'rand.txt' }];
+  correctionFiles = [{ title: 'some pdf file of sweet Goren' }, { title: 'very_well_organized.txt' }];
 
   /** config for the image slider */
   sliderConfig = {
