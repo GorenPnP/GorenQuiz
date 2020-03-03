@@ -20,9 +20,9 @@ export class DetailPage implements OnInit {
     question: {
       text: 'Can you read this?',
       images: [
-        { resLocation: 'assets/Pokemon-Go.png' },
-        { resLocation: 'assets/Pokédex-Skin_Cheren.png' }
-      ]
+        { resLocation: 'assets/Pokemon-Go.png', fromCorr: false },
+        { resLocation: 'assets/Pokédex-Skin_Cheren.png', fromCorr: true },
+      ],
     },
     answer_options: [
       {

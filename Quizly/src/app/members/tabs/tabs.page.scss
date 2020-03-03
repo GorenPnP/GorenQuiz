@@ -1,3 +1,7 @@
+ion-badge {
+	--background: var(--ion-color-warning);
+}
+
 ion-tab-bar {
 	--tab-bar-bg: var(--header-bg);
 	--ion-tab-bar-color: rgb(183, 218, 231);
@@ -7,6 +11,15 @@ ion-tab-bar {
 	--opacity: 85%;
 }
 
-ion-tab-button {
+ion-tab-button, ion-tab-button ion-item {
 	--color-selected: #fff;
+	--background: var(--tab-bar-bg);
+}
+
+ion-tab-button.tab-selected {
+		opacity: 1;
+		--tab-bar-bg: red;
+		--ion-item-color: var(--ion-tab-bar-color);
+		--ion-text-color-rgb: rgb(var(--ion-tab-bar-color));
+		--ion-text-color: var(--ion-tab-bar-color);
 }

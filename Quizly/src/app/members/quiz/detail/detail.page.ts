@@ -99,6 +99,6 @@ export class DetailPage implements OnInit {
   }
 
   goHome() {
-    this.alert.goHome('/results/index');
+    this.alert.goHome('');
   }
 }

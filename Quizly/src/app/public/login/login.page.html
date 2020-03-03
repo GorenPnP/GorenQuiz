@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>login</ion-title>
+    <ion-title>Log in</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -9,18 +9,19 @@
     <div class="flex-container-col" style="width: 90%;">
       <form>
         <ion-item>
-          <ion-label position="floating">Name <ion-text class="field-required">*</ion-text></ion-label>
-          <ion-input class="form-control" required="true" minlength=4 maxlength=50 [(ngModel)]="name" name="name"></ion-input>
+          <ion-label position="floating">E-Mail <ion-text class="field-required">*</ion-text></ion-label>
+          <ion-input type="email" pattern="^.+@.+\..+$" class="form-control" required="true" [(ngModel)]="email" name="email"></ion-input>
         </ion-item>
         <ion-item>
           <ion-label position="floating">Passwort <ion-text  class="field-required">*</ion-text></ion-label>
-          <ion-input class="form-control" required="true" minlength=8 maxlength=50 type="password" [(ngModel)]="password" name="password"></ion-input>
+          <ion-input class="form-control" required="true" type="password" [(ngModel)]="password" name="password"></ion-input>
         </ion-item>
 
         <ion-button type="submit" expand="block" (click)="submit()">Login</ion-button>
       </form>
 
-      <ion-text tappable [routerLink]="['/signin']" routerDirection="forward" style="text-decoration:underline">Noch keinen Account?</ion-text>
+      <ion-text tappable [routerLink]="['/register']" routerDirection="forward" class="link">Noch keinen Account?</ion-text>
+      <ion-text tappable (click)="forgotPassword()" class="link">Passwort vergessen?</ion-text>
 
     </div>
   </div>

@@ -1,0 +1,22 @@
+
+      <ion-item *ngIf="item.children.length" tappable [class]="class" (click)="emitClick()" detail="false">
+        <ion-icon *ngIf="item.expanded" slot="start" name="arrow-dropdown-circle"></ion-icon>
+        <ion-icon *ngIf="!item.expanded" slot="start" name="arrow-dropright-circle"></ion-icon>
+        <ion-label class="ion-text-wrap">{{ item.title }}</ion-label>
+
+        <ion-note slot="end">
+          <ion-chip [class.correctAnswer]="item.currScore >= item.maxScore">
+            {{ item.currScore | formatNumber }}/{{ item.maxScore | formatNumber }} P.</ion-chip>
+          <ion-chip>{{ item.openQuestions | formatNumber }}</ion-chip>
+        </ion-note>
+      </ion-item>
+
+      <ion-item *ngIf="!item.children.length" tappable [class]="class" detail="true"
+        [routerLink]="['/results/detail', item.id]" routerDirection="forward">
+        <ion-label class="ion-text-wrap">{{ item.title }}</ion-label>
+
+        <ion-note slot="end">
+          <ion-chip [class.correctAnswer]="item.currScore >= item.maxScore">
+            {{ item.currScore | formatNumber }}/{{ item.maxScore | formatNumber }} P.</ion-chip>
+        </ion-note>
+      </ion-item>

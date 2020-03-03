@@ -2,9 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { FlexSizeService, WindowSize } from 'src/app/services/flex-size.service';
 
-
-
-
 import { Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
 import { Platform } from '@ionic/angular';
 import { LevelSelectorService } from 'src/app/services/level-selector.service';
@@ -23,12 +20,13 @@ export interface QuizListEntry {
 
   expanded: boolean;
   chosen: boolean;
+  childChosen: boolean;
 }
 
 @Component({
-  selector: "app-index",
-  templateUrl: "./index.page.html",
-  styleUrls: ["./index.page.scss"]
+  selector: 'app-index',
+  templateUrl: './index.page.html',
+  styleUrls: ['./index.page.scss']
 })
 export class IndexPage implements OnInit {
   headerExpanded = false;
@@ -39,8 +37,6 @@ export class IndexPage implements OnInit {
 
   sectionFilter;
   sectionOptions;
-  sectionOptions2nd;
-  sectionOptions3rd;
 
   // TODO this is dummy content. Replace later with API data
   totalPoints: number = 10000;
@@ -48,112 +44,166 @@ export class IndexPage implements OnInit {
   maxOpenQuestionPoints: number = 128;
   data: QuizListEntry[] = [
     {
-      title: "Geschichte",
+      title: 'Geschichte',
       currScore: 14,
       maxScore: 27,
       openQuestions: 4,
       expanded: false,
       chosen: false,
+      childChosen: false,
       children: [
         {
-          title: "Der weiße Garten",
+          title: 'Der weiße Garten',
           currScore: 7,
           maxScore: 27,
           openQuestions: 4,
           expanded: false,
           chosen: false,
+          childChosen: false,
           children: [
             {
-              title: "Klasse 3",
+              title: 'Klasse 3',
               currScore: 4,
               maxScore: 12,
               openQuestions: 1,
               expanded: false,
               chosen: false,
-              children: []
+              childChosen: false,
+              children: [
+                {
+                  title: 'Der Anfang',
+                  currScore: 4,
+                  maxScore: 12,
+                  openQuestions: 1,
+                  expanded: false,
+                  chosen: false,
+                  childChosen: false,
+                  children: []
+                },
+              ]
             },
             {
-              title: "Klasse 4",
+              title: 'Klasse 4',
               currScore: 3,
               maxScore: 15,
               openQuestions: 3,
               expanded: false,
               chosen: false,
-              children: []
+              childChosen: false,
+              children: [
+                {
+                  title: 'weiter gehts',
+                  currScore: 4,
+                  maxScore: 12,
+                  openQuestions: 1,
+                  expanded: false,
+                  chosen: false,
+                  childChosen: false,
+                  children: []
+                },
+              ]
             }
           ]
         },
         {
-          title: "Der weiße Garten II",
+          title: 'Der weiße Garten II',
           currScore: 7,
           maxScore: 27,
           openQuestions: 4,
           expanded: false,
           chosen: false,
+          childChosen: false,
           children: [
             {
-              title: "Klasse 3 II",
+              title: 'Klasse 3 II',
               currScore: 4,
               maxScore: 12,
               openQuestions: 1,
               expanded: false,
               chosen: false,
+              childChosen: false,
               children: []
             },
             {
-              title: "Klasse 4 II",
+              title: 'Klasse 4 II',
               currScore: 3,
               maxScore: 15,
               openQuestions: 3,
               expanded: false,
               chosen: false,
-              children: []
+              childChosen: false,
+              children: [
+                {
+                  title: 'über die bekannte welt hinaus',
+                  currScore: 4,
+                  maxScore: 12,
+                  openQuestions: 1,
+                  expanded: false,
+                  chosen: false,
+                  childChosen: false,
+                  children: []
+                },
+              ]
             }
           ]
         }
       ]
     },
     {
-      title: "Zauberkunst",
+      title: 'Zauberkunst',
       currScore: 0,
       maxScore: 53,
       openQuestions: 10,
       expanded: false,
       chosen: false,
+      childChosen: false,
       children: [
         {
-          title: "Mana",
+          title: 'Mana',
           currScore: 0,
           maxScore: 53,
           openQuestions: 10,
           expanded: false,
           chosen: false,
+          childChosen: false,
           children: [
             {
-              title: "Klasse 10",
+              title: 'Klasse 10',
               currScore: 0,
               maxScore: 53,
               openQuestions: 10,
               expanded: false,
               chosen: false,
-              children: []
+              childChosen: false,
+              children: [
+                {
+                  title: 'ganz schön weit',
+                  currScore: 4,
+                  maxScore: 12,
+                  openQuestions: 1,
+                  expanded: false,
+                  chosen: false,
+                  childChosen: false,
+                  children: []
+                },
+              ]
             }
           ]
         }
       ]
     }
   ];
-//data: QuizListEntry[] = [];
+// data: QuizListEntry[] = [];
 
   constructor(
     private authService: AuthService,
     private flexSizeService: FlexSizeService,
     private levelSelector: LevelSelectorService,
     private accordeon: AccordeonService,
-    private platform: Platform
-  ) {}
+    private platform: Platform) {}
 
   ngOnInit() {
+
     // get initial window size
     this.platform.ready().then(_ => {
       this.windowSizeOnResize(null, this.platform.width());
@@ -164,7 +214,8 @@ export class IndexPage implements OnInit {
       .subscribe(size => (this.winSize = size));
 
     this.levelSelector.changedSubscription().subscribe(_ => {
-      [this.sectionFilter, this.sectionOptions, this.sectionOptions2nd, this.sectionOptions3rd]
+
+      [this.sectionFilter, this.sectionOptions]
         = this.levelSelector.getFilterAndOptions();
     });
 
@@ -193,7 +244,7 @@ export class IndexPage implements OnInit {
 
     // service works on this.data directly (shallow copy with parent instance)
     this.accordeon.changedChosen(parent);
-    this.chosenQuestions = this.accordeon.calcSelectedNum(this.data);
+    this.chosenQuestions = this.accordeon.calcSelectedNum(this.data, true);
   }
 
 
@@ -207,7 +258,7 @@ export class IndexPage implements OnInit {
 
   /** testing file manipulation */
   dir = FilesystemDirectory.Cache;
-  path = "secrets/text.txt";
+  path = 'secrets/text.txt';
 
   async testing() {
     await this.readdir();
@@ -218,17 +269,17 @@ export class IndexPage implements OnInit {
 
   async readdir() {
     Filesystem.readdir({
-      path: "",
+      path: '',
       directory: this.dir
     })
       .then(data => console.log(data))
-      .catch(e => console.error("Unable to read dir", e));
+      .catch(e => console.error('Unable to read dir', e));
   }
 
   async fileAppend() {
     await Filesystem.appendFile({
       path: this.path,
-      data: "MORE TESTS",
+      data: 'MORE TESTS',
       directory: this.dir,
       encoding: FilesystemEncoding.UTF8
     });

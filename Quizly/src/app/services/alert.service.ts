@@ -13,7 +13,7 @@ export class AlertService {
   ) {}
 
   async goHome(navTo: string) {
-    // TODO open dialog: last answer will be sent on leave. abandon session? y/n
+    // open dialog: last answer will be sent on leave. abandon session? y/n
     const alert = await this.alertController.create({
       header: 'Session beenden?',
       message:
@@ -45,7 +45,7 @@ export class AlertService {
     const alert = await this.alertController.create({
       header: 'Fehler mitteilen',
       message:
-        'Ist in der Fragestellung ein Fehler, teile ihn uns bitte mit. Danke!',
+        'Ist in der Aufgabenstellung ein Fehler, teile ihn uns bitte mit. Danke!',
       inputs: [
         {
           name: 'description_text',

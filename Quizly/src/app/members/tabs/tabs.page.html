@@ -1,13 +1,26 @@
-<ion-tabs>
+<ion-tabs (window:resize)="windowSizeOnResize($event)">
   <ion-tab-bar slot='bottom'>
-    <ion-tab-button tab='quiz/index'>
-      <ion-icon name='help'></ion-icon>
-      <ion-label class='ion-text-wrap'>Quiz</ion-label>
+    <ion-tab-button tab='quiz/index' [class.tab-selected]="selectedTab === TabNames.quiz">
+      <ion-item>
+        <ion-badge *ngIf="openQuiz" slot="end">{{ openQuiz }}</ion-badge>
+        <ion-icon name='help'></ion-icon>
+        <ion-label class='ion-text-wrap' [class.hide]="win < WindowSize.sm">Quiz</ion-label>
+      </ion-item>
     </ion-tab-button>
 
-    <ion-tab-button tab='results/index'>
-      <ion-icon name='pie'></ion-icon>
-      <ion-label class='ion-text-wrap'>Ergebnisse</ion-label>
+    <ion-tab-button tab='results/index' [class.tab-selected]="selectedTab === TabNames.results">
+      <ion-item>
+        <ion-badge *ngIf="openResults" slot="end">{{ openResults }}</ion-badge>
+        <ion-icon name='pie'></ion-icon>
+        <ion-label class='ion-text-wrap' [class.hide]="win < WindowSize.sm">Ergebnisse</ion-label>
+      </ion-item>
+    </ion-tab-button>
+
+    <ion-tab-button tab='stats' [class.tab-selected]="selectedTab === TabNames.stats">
+      <ion-item>
+        <ion-icon name='stats'></ion-icon>
+        <ion-label class='ion-text-wrap' [class.hide]="win < WindowSize.sm">Statistik</ion-label>
+      </ion-item>
     </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>

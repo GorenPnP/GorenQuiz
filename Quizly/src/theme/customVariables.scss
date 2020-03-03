@@ -126,6 +126,11 @@
 
 	.hide {display: none;}
 
+	.link {
+		text-decoration: underline;
+		padding: 4px;
+	}
+
 	.question-tile {
 		margin-bottom: 10px;
 		box-shadow: var(--question-tile-box-shadow);
@@ -139,3 +144,7 @@
 	.right-answer {background-color: #66f7a0;}
 	.wrong-answer {background-color: #f78d8d;}
 }
+
+.halfWidth {width: 50%;}
+
+.fullWidth {width: 100%}

@@ -9,7 +9,11 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
-import { PipesModule } from './pipes/pipes.module';
+
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,7 +23,10 @@ import { PipesModule } from './pipes/pipes.module';
     IonicModule.forRoot(),
     AppRoutingModule,
     ReactiveFormsModule,
-    PipesModule
+
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
+    AngularFireAuthModule
   ],
   providers: [
     StatusBar,

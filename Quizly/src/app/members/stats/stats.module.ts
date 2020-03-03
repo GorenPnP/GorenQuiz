@@ -4,10 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { IndexPageRoutingModule } from './index-routing.module';
+import { StatsPageRoutingModule } from './stats-routing.module';
 
-import { IndexPage } from './index.page';
-import { PipesModule } from 'src/app/pipes/pipes.module';
+import { StatsPage } from './stats.page';
 import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
@@ -15,10 +14,9 @@ import { ComponentsModule } from 'src/app/components/components.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    IndexPageRoutingModule,
-    PipesModule,
+    StatsPageRoutingModule,
     ComponentsModule
   ],
-  declarations: [IndexPage]
+  declarations: [StatsPage]
 })
-export class IndexPageModule {}
+export class StatsPageModule {}

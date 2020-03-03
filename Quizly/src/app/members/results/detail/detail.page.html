@@ -35,9 +35,9 @@
       </ion-col>
 
       <ion-col size-lg="3" size-sm="6" size-xs="12">
-        <ion-slides *ngIf="questionData.question.images" [options]="sliderConfig" class="slidesResponsive" [pager]="questionData.question.images.length > 1">
+        <ion-slides *ngIf="questionData.question.images.length" [options]="sliderConfig" class="slidesResponsive" [pager]="questionData.question.images.length > 1">
           <ion-slide *ngFor="let img of questionData.question.images">
-            <ion-card class="noHeader">
+            <ion-card class="noHeader" [class.corrImage]="img.fromCorr">
               <ion-card-content>
                 <div class="swiper-zoom-container">
                   <img [src]='img.resLocation'/>

@@ -8,7 +8,6 @@ export class AccordeonService {
   constructor() { }
 
   toggleExpanded(allPeers: any[], index: number): void {
-
     allPeers.forEach((item, itemIndex) => {
       // toggle on 'index === itemIndex' and if unequal, set to false
       item.expanded = index === itemIndex && !item.expanded;
@@ -25,17 +24,21 @@ export class AccordeonService {
     if (parent.children.every((child: any) => child.chosen)) {
       parent.children.map((child: any, childIndex: number) => {
         child.chosen = false;
-        if (child.expanded) { this.toggleExpanded(parent, childIndex); }
+        if (child.expanded) { this.toggleExpanded(parent.children, childIndex); }
       });
       parent.chosen = true;
     }
   }
 
-  calcSelectedNum(allPeers: any[]): number {
+  calcSelectedNum(allPeers: any[], considerChosenChildren: boolean = false): number {
     let sum = 0;
     allPeers.forEach((item: any) => {
       if (item.chosen) { sum += item.openQuestions; }
-      else { sum += this.calcSelectedNum(item.children); }
+      else {
+        const childSum = this.calcSelectedNum(item.children, considerChosenChildren);
+        if (considerChosenChildren) { item.childChosen = !!childSum; }
+        sum += childSum;
+      }
     });
     return sum;
   }
