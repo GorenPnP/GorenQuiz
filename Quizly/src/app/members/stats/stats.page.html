@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-select slot="start" placeholder="Kategorie" interface="popover" (ionChange)="changedSelect()" [(ngModel)]="sectionFilter">
+      <ion-select-option *ngFor="let option of sectionOptions" [value]="option.val">{{ option.name }}
+      </ion-select-option>
+    </ion-select>
+
+    <ion-title>Fortschritt</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon slot="icon-only" name="log-out"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngFor="let item of stats">
+        <stat-item [item]="item"></stat-item>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

@@ -11,14 +11,9 @@ const routes: Routes = [
       import('./public/login/login.module').then(m => m.LoginPageModule)
   },
   {
-    path: 'signin',
+    path: 'register',
     loadChildren: () =>
-      import('./public/signin/signin.module').then(m => m.SigninPageModule)
-  },
-
-  {
-    path: 'email-code',
-    loadChildren: () => import('./public/email-code/email-code.module').then( m => m.EmailCodePageModule)
+      import('./public/register/register.module').then(m => m.RegisterPageModule)
   },
   {
     path: 'creators',

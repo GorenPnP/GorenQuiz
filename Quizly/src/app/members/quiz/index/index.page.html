@@ -3,35 +3,24 @@
 
     <ion-grid>
         <ion-row>
-          <ion-col>
-            <ion-select placeholder="1. Ebene" interface="popover" (ionChange)="changedSelect(1)" [(ngModel)]="sectionFilter[0]">
-              <ion-select-option *ngFor="let option of sectionOptions" [value]="option.val">{{ option.name }}</ion-select-option>
-            </ion-select>
-          </ion-col>
+          <ion-col xs-size="12" sm-size="4" md-size="3" *ngFor="let _ of sectionFilter; let i = index" [class.halfWidth]="winSize > WindowSize.xs" [class.fullWidth]="winSize === WindowSize.xs">
 
-        <ion-col>
-          <ion-button disabled size="small" [class.hide]="sectionFilter[0] === null">
-            <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
-          </ion-button>
-        </ion-col>
+            <table><tr><td>
 
-        <ion-col>
-          <ion-select placeholder="2. Ebene" interface="popover" (ionChange)="changedSelect(2)" [(ngModel)]="sectionFilter[1]" [class.hide]="sectionFilter[0] === null">
-            <ion-select-option *ngFor="let option of sectionOptions2nd" [value]="option.val">{{ option.name }}</ion-select-option>
-          </ion-select>
-        </ion-col>
+              <ion-select placeholder="{{i+1}}. Ebene" interface="popover" (ionChange)="changedSelect(i+1)"
+                [class.hide]="i !== 0 && sectionFilter[i-1] === null" [(ngModel)]="sectionFilter[i]">
+                <ion-select-option *ngFor="let option of sectionOptions[i]" [value]="option.val">{{ option.name }}
+                </ion-select-option>
+              </ion-select>
 
-        <ion-col>
-          <ion-button disabled size="small" [class.hide]="sectionFilter[1] === null" [class.btn-disabled]="!sectionOptions3rd.length">
-            <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
-          </ion-button>
-        </ion-col>
+              </td><td>
 
-        <ion-col>
-          <ion-select placeholder="3. Ebene" interface="popover" (ionChange)="changedSelect(3)" [(ngModel)]="sectionFilter[2]" [class.hide]="sectionFilter[1] === null" [disabled]="!sectionOptions3rd.length">
-            <ion-select-option *ngFor="let option of sectionOptions3rd" [value]="option.val">{{ option.name }}</ion-select-option>
-          </ion-select>
-        </ion-col>
+              <ion-button disabled size="small" [class.hide]="i === 3 || sectionFilter[i] === null">
+                <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
+              </ion-button>
+
+              </td></tr></table>
+            </ion-col>
         </ion-row>
 
       <ion-row>
@@ -82,14 +71,12 @@
       </ion-grid>
   </ion-toolbar>
 </ion-header>
-
 <ion-content (window:resize)="windowSizeOnResize($event)">
 
   <!-- Testing -->
+  <!--
   <ion-text>Window Size: {{ winSize }}</ion-text>
-<!--
   <ion-text [routerLink]="['/quiz/end']" routerDirection="forward" style="text-decoration:underline">Link</ion-text>
-
   <ion-button href="https://capacitor.ionicframework.com/docs/apis/filesystem">
     <ion-icon slot="start" name="document"></ion-icon>
     API Details
@@ -100,56 +87,60 @@
 -->
 
   <div *ngIf="!data.length" class="flex-container-row" style="height:100%">
-      <div class="flex-container-col">
-        <h2>Glückwunsch, du hast keine ausstehenden Fragen mehr 🙂</h2>
-      </div>
+    <div class="flex-container-col">
+      <h2>Glückwunsch, du hast keine ausstehenden Fragen mehr 🙂</h2>
+    </div>
   </div>
 
   <div *ngIf="data.length">
-    <ion-list detail="false" class="accordeon-list">
+    <ion-list class="accordeon-list">
       <div *ngFor="let item of data; let i = index;">
-        <ion-item tappable class="accordeon-list-1st-level" (click)="toggleExpanded(i)">
-          <ion-icon *ngIf="item.expanded && !item.chosen" slot="start" name="arrow-dropdown-circle"></ion-icon>
-          <ion-icon *ngIf="!item.expanded && !item.chosen" slot="start" name="arrow-dropright-circle"></ion-icon>
-          <ion-label class="ion-text-wrap">{{ item.title }}</ion-label>
 
-          <ion-note slot="end">
-            <ion-chip [class.hide]="winSize === WindowSize.xs">{{ item.currScore | formatNumber }}/{{ item.maxScore | formatNumber }} P.</ion-chip>
-            <ion-chip>{{ item.openQuestions | formatNumber }}</ion-chip>
-          </ion-note>
-
-          <ion-checkbox [(ngModel)]="item.chosen" slot="end" (ionChange)="changedChosen(i)"></ion-checkbox>
-        </ion-item>
+        <accordeon-quiz-item
+          [item]="item"
+          (cClick)="toggleExpanded(i)"
+          class="accordeon-list-1st-level"
+          [hide]="winSize === WindowSize.xs"
+          (cChange)="changedChosen(i)"></accordeon-quiz-item>
 
         <div *ngIf="item.children.length && item.expanded && !item.chosen">
-          <ion-list detail="false" class="accordeon-child-list">
+          <ion-list class="accordeon-child-list">
             <div *ngFor="let child of item.children; let j = index;">
-              <ion-item tappable class="accordeon-list-2nd-level" (click)="toggleExpanded(i, j)">
-                <ion-icon *ngIf="child.expanded && !child.chosen" slot="start" name="arrow-dropdown-circle"></ion-icon>
-                <ion-icon *ngIf="!child.expanded && !child.chosen" slot="start" name="arrow-dropright-circle"></ion-icon>
-                <ion-label class="ion-text-wrap">{{ child.title }}</ion-label>
 
-                <ion-note slot="end">
-                  <ion-chip [class.hide]="winSize === WindowSize.xs">{{ child.currScore | formatNumber }}/{{ child.maxScore | formatNumber }} P.</ion-chip>
-                  <ion-chip>{{ child.openQuestions | formatNumber }}</ion-chip>
-                </ion-note>
+              <accordeon-quiz-item
+                [item]="child"
+                (cClick)="toggleExpanded(i, j)"
+                class="accordeon-list-2nd-level"
+                [hide]="winSize === WindowSize.xs"
+                (cChange)="changedChosen(i, j)"></accordeon-quiz-item>
 
-                <ion-checkbox [(ngModel)]="child.chosen" slot="end" (ionChange)="changedChosen(i, j)"></ion-checkbox>
-              </ion-item>
 
               <div *ngIf="child.children.length && child.expanded && !child.chosen">
-                <ion-list detail="false" class="accordeon-child-list">
-                  <div *ngFor="let grandchild of child.children; let k = index;">
-                    <ion-item tappable class="accordeon-list-3rd-level">
-                      <ion-label class="ion-text-wrap">{{ grandchild.title }}</ion-label>
+                <ion-list class="accordeon-child-list">
+                  <div *ngFor="let gchild of child.children; let k = index;">
 
-                      <ion-note slot="end">
-                        <ion-chip [class.hide]="winSize === WindowSize.xs">{{ grandchild.currScore | formatNumber }}/{{ grandchild.maxScore | formatNumber }} P.</ion-chip>
-                      <ion-chip>{{ grandchild.openQuestions | formatNumber }}</ion-chip>
-                      </ion-note>
+                    <accordeon-quiz-item
+                      [item]="gchild"
+                      (cClick)="toggleExpanded(i, j, k)"
+                      class="accordeon-list-3rd-level"
+                      [hide]="winSize === WindowSize.xs"
+                      (cChange)="changedChosen(i, j, k)"></accordeon-quiz-item>
 
-                      <ion-checkbox [(ngModel)]="grandchild.chosen" slot="end" (ionChange)="changedChosen(i, j, k)"></ion-checkbox>
-                    </ion-item>
+
+                    <div *ngIf="gchild.children.length && gchild.expanded && !gchild.chosen">
+                      <ion-list class="accordeon-child-list">
+                        <div *ngFor="let ggchild of gchild.children; let l = index;">
+
+                          <accordeon-quiz-item
+                            [item]="ggchild"
+                            (cClick)="toggleExpanded(i, j, k, l)"
+                            class="accordeon-list-4th-level"
+                            [hide]="winSize === WindowSize.xs"
+                            (cChange)="changedChosen(i, j, k, l)"></accordeon-quiz-item>
+
+                        </div>
+                      </ion-list>
+                    </div>
                   </div>
                 </ion-list>
               </div>

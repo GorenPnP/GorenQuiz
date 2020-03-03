@@ -27,11 +27,9 @@ export class IndexPage implements OnInit {
   winSize: WindowSize;
 
   chosenQuestions = 0;
-  sectionFilter;
 
+  sectionFilter;
   sectionOptions;
-  sectionOptions2nd;
-  sectionOptions3rd;
 
   // TODO this is dummy content. Replace later with API data
   totalPoints: number = 10000;
@@ -195,12 +193,7 @@ export class IndexPage implements OnInit {
         .subscribe(size => (this.winSize = size));
 
       this.levelSelector.changedSubscription().subscribe(_ => {
-        const data = this.levelSelector.getFilterAndOptions();
-
-        this.sectionFilter = data[0];
-        this.sectionOptions = data[1];
-        this.sectionOptions2nd = data[2];
-        this.sectionOptions3rd = data[3];
+        [this.sectionFilter, this.sectionOptions] = this.levelSelector.getFilterAndOptions();
       });
     });
 

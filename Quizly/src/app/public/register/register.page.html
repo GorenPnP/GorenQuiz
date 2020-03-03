@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Neu registrieren</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="flex-container-row" style="height: 100%;">
+    <div class="flex-container-col" style="width: 90%;">
+      <form>
+        <ion-item>
+          <ion-label position="floating">Name <ion-text class="field-required">*</ion-text></ion-label>
+          <ion-input class="form-control" required="true" maxlength=50 [(ngModel)]="name" name="name"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">E-Mail <ion-text class="field-required">*</ion-text></ion-label>
+          <ion-input
+            type="email"
+            pattern="^.+@.+\..+$"
+            class="form-control"
+            required="true"
+            [(ngModel)]="email"
+            name="email"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Passwort <ion-text class="field-required">*</ion-text></ion-label>
+          <ion-input
+          class="form-control"
+          required="true"
+          minlength=6
+          maxlength=50
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          pattern="([0-9]+.*[a-zA-Z]+)|([a-zA-Z]+.*[0-9]+)"
+          placeholder="mind. 6 Zeichen, davon mind. eine Ziffer"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Passwort <ion-text class="field-required">*</ion-text></ion-label>
+          <ion-input
+          class="form-control"
+          required="true"
+          maxlength=50
+          type="password"
+          [(ngModel)]="passwordCheck"
+          name="password"
+          [pattern]="password"
+          name="password"
+          placeholder="mind. 6 Zeichen, davon mind. eine Ziffer"></ion-input>
+        </ion-item>
+
+        <ion-button type="submit" expand="block" (click)="submit()">Login</ion-button>
+      </form>
+    </div>
+  </div>
+</ion-content>
