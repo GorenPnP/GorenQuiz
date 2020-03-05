@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { AccordeonQuestionItemComponent } from './accordeon-question-item.component';
+import { FullHeaderComponent } from './full-header.component';
 
-describe('AccordeonQuestionItemComponent', () => {
-  let component: AccordeonQuestionItemComponent;
-  let fixture: ComponentFixture<AccordeonQuestionItemComponent>;
+describe('FullHeaderComponent', () => {
+  let component: FullHeaderComponent;
+  let fixture: ComponentFixture<FullHeaderComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AccordeonQuestionItemComponent ],
+      declarations: [ FullHeaderComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AccordeonQuestionItemComponent);
+    fixture = TestBed.createComponent(FullHeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

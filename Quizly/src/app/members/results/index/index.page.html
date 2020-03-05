@@ -1,84 +1,15 @@
-<ion-header>
-	<ion-toolbar *ngIf="headerExpanded">
-
-    <ion-grid>
-        <ion-row>
-          <ion-col xs-size="12" sm-size="4" md-size="3" *ngFor="let _ of sectionFilter; let i = index"
-            [class.halfWidth]="winSize > WindowSize.xs" [class.fullWidth]="winSize === WindowSize.xs">
-
-            <table>
-              <tr>
-                <td>
-
-                  <ion-select placeholder="{{i+1}}. Ebene" interface="popover" (ionChange)="changedSelect(i+1)"
-                    [class.hide]="i !== 0 && sectionFilter[i-1] === null" [(ngModel)]="sectionFilter[i]">
-                    <ion-select-option *ngFor="let option of sectionOptions[i]" [value]="option.val">{{ option.name }}
-                    </ion-select-option>
-                  </ion-select>
-
-                </td>
-                <td>
-
-                  <ion-button disabled size="small" [class.hide]="i === 3 || sectionFilter[i] === null">
-                    <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
-                  </ion-button>
-
-                </td>
-              </tr>
-            </table>
-          </ion-col>
-        </ion-row>
-
-      <ion-row>
-        <ion-col size-sm="2.5" [class.hide]="winSize > WindowSize.xs">
-          <ion-chip disabled>{{ totalPoints | formatNumber }} P. gesamt</ion-chip>
-        </ion-col>
-
-        <ion-col size-sm="2.5" [class.hide]="winSize > WindowSize.xs">
-          <ion-chip disabled>{{ openQuestionPoints | formatNumber }}/{{ maxOpenQuestionPoints | formatNumber }} P. erreicht</ion-chip>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-	</ion-toolbar>
-
-  <ion-toolbar>
-    <ion-grid fixed style="margin: 0; padding: 0; width: 100%;">
-      <ion-row>
-        <ion-col size-xs="3" size-sm="1.5">
-          <ion-button *ngIf="headerExpanded" (click)="headerExpanded = !headerExpanded">
-            <ion-icon name="arrow-dropdown"></ion-icon>
-          </ion-button>
-
-          <ion-button *ngIf="!headerExpanded" (click)="headerExpanded = !headerExpanded">
-            <ion-icon name="arrow-dropright"></ion-icon>
-          </ion-button>
-        </ion-col>
-
-        <ion-col size-sm="2.5" [class.hide]="winSize === WindowSize.xs">
-          <ion-chip disabled>{{ totalPoints | formatNumber }} P. gesamt</ion-chip>
-        </ion-col>
-
-        <ion-col size-sm="2.5" [class.hide]="winSize === WindowSize.xs">
-          <ion-chip disabled>{{ openQuestionPoints | formatNumber }}/{{ maxOpenQuestionPoints | formatNumber }} P. erreicht</ion-chip>
-        </ion-col>
-
-        <ion-col size-xs="6" size-sm="4">
-          <ion-button *ngIf="chosenQuestions" fill="outline" [routerLink]="['/quiz/detail']" routerDirection="forward">
-            {{ chosenQuestions | formatNumber }} Frage/n. GO!
-          </ion-button>
-        </ion-col>
-
-        <ion-col size-xs="3" size-sm="1.5">
-          <ion-button (click)="logout()">
-            <ion-icon slot="icon-only" name="log-out"></ion-icon>
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content (window:resize)="windowSizeOnResize($event)">
+<full-header
+  [config]="headerConfig"
+  [secFilter]="sectionFilter"
+  [secOptions]="sectionOptions"
+  [totalPoints]="totalPoints"
+  [openQuestionPoints]="openQuestionPoints"
+  [maxOpenQuestionPoints]="maxOpenQuestionPoints"
+  [chosenQuestions]="chosenQuestions"
+  (levelChange)="changedSelect($event)"
+  (logout)="logout()"
+></full-header>
+<ion-content>
 
   <div  *ngIf="!data.length" class="flex-container-row" style="height:100%">
     <div class="flex-container-col">
@@ -90,22 +21,38 @@
   <div *ngIf="data.length">
     <ion-list class="accordeon-list">
       <div *ngFor="let item1 of data; let i = index;">
-        <accordeon-results-item [item]="item1" class="accordeon-list-1st-level" (cClick)="toggleExpanded(i)"></accordeon-results-item>
+        <accordeon-item
+          [item]="item1"
+          [config]="accordeonConfig"
+          class="accordeon-list-1st-level"
+          (cClick)="toggleExpanded(i)"></accordeon-item>
 
         <div *ngIf="item1.children.length && item1.expanded">
           <ion-list class="accordeon-child-list">
             <div *ngFor="let item2 of item1.children; let j = index;">
-              <accordeon-results-item [item]="item2" class="accordeon-list-2nd-level" (cClick)="toggleExpanded(i, j)"></accordeon-results-item>
+              <accordeon-item
+                [item]="item2"
+                [config]="accordeonConfig"
+                class="accordeon-list-2nd-level"
+                (cClick)="toggleExpanded(i, j)"></accordeon-item>
 
               <div *ngIf="item2.children.length && item2.expanded">
                 <ion-list class="accordeon-child-list">
                   <div *ngFor="let item3 of item2.children; let k = index;">
-                    <accordeon-results-item [item]="item3" class="accordeon-list-3rd-level" (cClick)="toggleExpanded(i, j, k)"></accordeon-results-item>
+                    <accordeon-item
+                      [item]="item3"
+                      [config]="accordeonConfig"
+                      class="accordeon-list-3rd-level"
+                      (cClick)="toggleExpanded(i, j, k)"></accordeon-item>
 
                     <div *ngIf="item3.children.length && item3.expanded">
                       <ion-list class="accordeon-child-list">
                         <div *ngFor="let item4 of item3.children; let l = index;">
-                          <accordeon-results-item [item]="item4" class="accordeon-list-4th-level" (cClick)="toggleExpanded(i, j, k, l)"></accordeon-results-item>
+                          <accordeon-item
+                            [item]="item4"
+                            [config]="accordeonConfig"
+                            class="accordeon-list-4th-level"
+                            (cClick)="toggleExpanded(i, j, k, l)"></accordeon-item>
                         </div>
                       </ion-list>
                     </div>

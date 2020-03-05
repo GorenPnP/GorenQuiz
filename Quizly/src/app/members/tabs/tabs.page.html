@@ -1,4 +1,4 @@
-<ion-tabs (window:resize)="windowSizeOnResize($event)">
+<ion-tabs>
   <ion-tab-bar slot='bottom'>
     <ion-tab-button tab='quiz/index' [class.tab-selected]="selectedTab === TabNames.quiz">
       <ion-item>
@@ -11,14 +11,14 @@
     <ion-tab-button tab='results/index' [class.tab-selected]="selectedTab === TabNames.results">
       <ion-item>
         <ion-badge *ngIf="openResults" slot="end">{{ openResults }}</ion-badge>
-        <ion-icon name='pie'></ion-icon>
+        <ion-icon name='pie-chart'></ion-icon>
         <ion-label class='ion-text-wrap' [class.hide]="win < WindowSize.sm">Ergebnisse</ion-label>
       </ion-item>
     </ion-tab-button>
 
     <ion-tab-button tab='stats' [class.tab-selected]="selectedTab === TabNames.stats">
       <ion-item>
-        <ion-icon name='stats'></ion-icon>
+        <ion-icon name='stats-chart'></ion-icon>
         <ion-label class='ion-text-wrap' [class.hide]="win < WindowSize.sm">Statistik</ion-label>
       </ion-item>
     </ion-tab-button>

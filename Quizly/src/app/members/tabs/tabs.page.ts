@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 
 import { Router, RouterEvent } from '@angular/router';
 import { WindowSize, FlexSizeService } from 'src/app/services/flex-size.service';
-import { Platform } from '@ionic/angular';
 
 enum TabNames { quiz, results, stats }
 
@@ -23,7 +22,6 @@ export class TabsPage implements OnInit {
   openResults: number = 2;
 
   constructor(private flexSizeService: FlexSizeService,
-              private platform: Platform,
               private router: Router) {
 
     this.router.events.subscribe((event: RouterEvent) => {
@@ -38,18 +36,8 @@ export class TabsPage implements OnInit {
   }
 
   ngOnInit() {
-
-    // get initial window size
-    this.platform.ready().then(_ => {
-      this.windowSizeOnResize(null, this.platform.width());
-    });
-
     this.flexSizeService
       .sizeSubscription()
       .subscribe(size => (this.win = size));
-  }
-
-  windowSizeOnResize(ev: any, width?: number) {
-    this.flexSizeService.adaptSize(ev, width);
   }
 }

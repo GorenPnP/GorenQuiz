@@ -3,9 +3,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FlexSizeService, WindowSize } from 'src/app/services/flex-size.service';
 
 import { Plugins, FilesystemDirectory, FilesystemEncoding } from '@capacitor/core';
-import { Platform } from '@ionic/angular';
 import { LevelSelectorService } from 'src/app/services/level-selector.service';
 import { AccordeonService } from 'src/app/services/accordeon.service';
+import { HeaderConfig } from '../../../components/full-header/full-header.component';
+import { AccordeonConfig } from 'src/app/components/accordeon-item/accordeon-item.component';
 
 const { Filesystem } = Plugins;
 
@@ -32,6 +33,23 @@ export class IndexPage implements OnInit {
   headerExpanded = false;
   WindowSize = WindowSize; // to use enum in template
   winSize: WindowSize;
+
+  headerConfig: HeaderConfig = {
+      hideOnXS: true,
+      sectionFilter: true,
+      logout: true,
+      totalPoints: true,
+      relationAchievedPoints: true,
+      chosenQuestions: true,
+    };
+
+  accordeonConfig: AccordeonConfig = {
+    linkOnLast: false,
+    choosable: true,
+    hideOnXS: true,
+    markChosenChildren: true,
+    markCorrectAnswer: false,
+  };
 
   chosenQuestions = 0;
 
@@ -199,16 +217,9 @@ export class IndexPage implements OnInit {
     private authService: AuthService,
     private flexSizeService: FlexSizeService,
     private levelSelector: LevelSelectorService,
-    private accordeon: AccordeonService,
-    private platform: Platform) {}
+    private accordeon: AccordeonService) {}
 
   ngOnInit() {
-
-    // get initial window size
-    this.platform.ready().then(_ => {
-      this.windowSizeOnResize(null, this.platform.width());
-    });
-
     this.flexSizeService
       .sizeSubscription()
       .subscribe(size => (this.winSize = size));
@@ -245,11 +256,6 @@ export class IndexPage implements OnInit {
     // service works on this.data directly (shallow copy with parent instance)
     this.accordeon.changedChosen(parent);
     this.chosenQuestions = this.accordeon.calcSelectedNum(this.data, true);
-  }
-
-
-  windowSizeOnResize(ev: any, width?: number) {
-    this.flexSizeService.adaptSize(ev, width);
   }
 
   logout() {

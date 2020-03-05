@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar *ngIf="expanded">
+
+    <ion-grid>
+      <ion-row *ngIf="config.sectionFilter">
+        <ion-col size-xs="12" size-sm="4" size-md="3" *ngFor="let _ of secFilter; let i = index"
+          [class.halfWidth]="win > WindowSize.xs" [class.fullWidth]="win === WindowSize.xs">
+
+          <table>
+            <tr>
+              <td>
+
+                <ion-select placeholder="{{i+1}}. Ebene" interface="popover" (ionChange)="emitChange(i+1)"
+                  [class.hide]="i !== 0 && secFilter[i-1] === null" [(ngModel)]="secFilter[i]">
+                  <ion-select-option *ngFor="let option of secOptions[i]" [value]="option.val">{{ option.name }}
+                  </ion-select-option>
+                </ion-select>
+
+              </td>
+              <td>
+
+                <ion-button disabled class="select" size="small" [class.hide]="i === secFilter.length - 1 || secFilter[i] === null">
+                  <ion-icon slot="icon-only" name="arrow-forward"></ion-icon>
+                </ion-button>
+
+              </td>
+            </tr>
+          </table>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col *ngIf="config.totalPoints" size-sm="2.5" [class.hide]="win > WindowSize.xs && config.hideOnXS">
+          <ion-chip disabled>{{ totalPoints | formatNumber }} P. gesamt</ion-chip>
+        </ion-col>
+
+        <ion-col *ngIf="config.relationAchievedPoints" size-sm="2.5" [class.hide]="win > WindowSize.xs && config.hideOnXS">
+          <ion-chip disabled>{{ openQuestionPoints | formatNumber }}/{{ maxOpenQuestionPoints | formatNumber }} P.
+            erreicht</ion-chip>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-grid fixed style="margin: 0; padding: 0; width: 100%;">
+      <ion-row>
+        <ion-col size-xs="3" size-sm="1.5">
+          <ion-button (click)="expanded = !expanded">
+            <ion-icon slot="icon-only" *ngIf="!expanded" md="caret-down" ios="chevron-down-circle-outline"></ion-icon>
+            <ion-icon slot="icon-only" *ngIf="expanded" md="caret-up" ios="chevron-up-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+
+        <ion-col *ngIf="config.totalPoints" size-sm="2.5" [class.hide]="win === WindowSize.xs && config.hideOnXS">
+          <ion-chip disabled>{{ totalPoints | formatNumber }} P. gesamt</ion-chip>
+        </ion-col>
+
+        <ion-col *ngIf="config.relationAchievedPoints" size-sm="2.5" [class.hide]="win === WindowSize.xs && config.hideOnXS">
+          <ion-chip disabled>{{ openQuestionPoints | formatNumber }}/{{ maxOpenQuestionPoints | formatNumber }} P.
+            erreicht</ion-chip>
+        </ion-col>
+
+        <ion-col *ngIf="config.chosenQuestions" size-xs="6" size-sm="4">
+          <ion-button *ngIf="chosenQuestions" class="special" fill="outline" [routerLink]="['/quiz/detail']" routerDirection="forward">
+            {{ chosenQuestions | formatNumber }} Frage/n. GO!
+          </ion-button>
+        </ion-col>
+
+        <ion-col *ngIf="config.logout" size-xs="3" size-sm="1.5">
+          <ion-button (click)="emitLogout()">
+            <ion-icon slot="icon-only" name="log-out"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>

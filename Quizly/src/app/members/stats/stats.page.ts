@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-
+import { WindowSize, FlexSizeService } from 'src/app/services/flex-size.service';
 
 export interface stat {
   label: string;
@@ -14,6 +14,9 @@ export interface stat {
   styleUrls: ['./stats.page.scss'],
 })
 export class StatsPage implements OnInit {
+
+  WindowSize = WindowSize;
+  win: WindowSize = 0;
 
   sectionFilter = null;
   sectionOptions = [{val: 'f', name:'Fach'}, {val: 't', name: 'Thema'}, {val: 'k', name: 'Klasse'}, {val: 'b', name: 'Bundle'}];
@@ -96,14 +99,17 @@ export class StatsPage implements OnInit {
     },
   ];
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService,
+              private flexSizeService: FlexSizeService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.flexSizeService
+      .sizeSubscription()
+      .subscribe(size => (this.win = size));
+  }
 
-  changedSelect() {}
-
-  windowSizeOnResize(ev) {
-
+  changedSelect() {
+    // TODO: send to backend and retrieve new stats
   }
 
   logout() {

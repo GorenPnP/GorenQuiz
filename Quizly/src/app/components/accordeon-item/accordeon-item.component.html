@@ -1,0 +1,35 @@
+<ion-item *ngIf="item.children.length" (click)="emitClick()" tappable [class]="class" detail=false>
+
+  <ion-icon *ngIf="(config.choosable && item.expanded && !item.chosen) || (!config.choosable && item.expanded)"
+    slot="start" md="caret-down" ios="chevron-down-circle-outline"></ion-icon>
+  <ion-icon *ngIf="(config.choosable && !item.expanded && !item.chosen) || (!config.choosable && !item.expanded)"
+    slot="start" md="caret-forward" ios="chevron-forward-circle-outline"></ion-icon>
+
+  <ion-label class="ion-text-wrap">{{ item.title }}</ion-label>
+
+  <ion-note slot="end">
+    <ion-chip [class.hide]="config.hideOnXS && win === WindowSize.xs"
+      [class.correctAnswer]="config.markCorrectAnswer && item.currScore >= item.maxScore">
+      {{ item.currScore | formatNumber }}/{{ item.maxScore | formatNumber }} P.</ion-chip>
+    <ion-chip [class.childChosen]="config.markChosenChildren && item.childChosen">
+      {{ item.openQuestions | formatNumber }}</ion-chip>
+  </ion-note>
+
+  <ion-checkbox *ngIf="config.choosable" [(ngModel)]="item.chosen" slot="end" (ionChange)="emitChanged()">
+  </ion-checkbox>
+</ion-item>
+
+<ion-item *ngIf="!item.children.length" (click)="navigateTo(item.id)" tappable [class]="class"
+  [detail]="config.linkOnLast">
+  <ion-label class="ion-text-wrap">{{ item.title }}</ion-label>
+
+  <ion-note slot="end">
+    <ion-chip [class.hide]="config.hideOnXS && win === WindowSize.xs"
+      [class.correctAnswer]="config.markCorrectAnswer && item.currScore >= item.maxScore">
+      {{ item.currScore | formatNumber }}/{{ item.maxScore | formatNumber }} P.</ion-chip>
+    <ion-chip *ngIf="config.linkOnLast">{{ item.openQuestions | formatNumber }}</ion-chip>
+  </ion-note>
+
+  <ion-checkbox *ngIf="config.choosable" [(ngModel)]="item.chosen" slot="end" (ionChange)="emitChanged()">
+  </ion-checkbox>
+</ion-item>

@@ -8,6 +8,7 @@ const { SplashScreen } = Plugins;
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './services/auth.service';
 import { Router } from '@angular/router';
+import { FlexSizeService } from './services/flex-size.service';
 
 @Component({
   selector: 'app-root',
@@ -19,9 +20,16 @@ export class AppComponent {
     private platform: Platform,
     private statusBar: StatusBar,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private flexSizeService: FlexSizeService
   ) {
     this.initializeApp();
+
+
+    // get initial window size
+    this.platform.ready().then(_ => {
+      this.windowSizeOnResize(null, this.platform.width());
+    });
   }
 
   initializeApp() {
@@ -37,5 +45,9 @@ export class AppComponent {
         }
       });
    });
+  }
+
+  windowSizeOnResize(ev: any, width?: number) {
+    this.flexSizeService.adaptSize(ev, width);
   }
 }

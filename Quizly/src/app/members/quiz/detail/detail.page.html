@@ -1,24 +1,12 @@
-<ion-header>
-  <ion-toolbar>
-
-    <ion-chip>{{ currScore | formatNumber }}/{{ maxScore | formatNumber }} P.</ion-chip>
-                  <ion-chip>Frage {{ currQuestion | formatNumber }}/{{ numQuestion | formatNumber }}</ion-chip>
-
-    <ion-buttons slot="end">
-      <ion-button (click)="goHome()">
-        <ion-icon slot="icon-only" name="home"></ion-icon>
-      </ion-button>
-
-      <ion-button (click)="reportError()">
-        <ion-icon slot="icon-only" name="alert"></ion-icon>
-      </ion-button>
-
-      <ion-button (click)="logout()">
-        <ion-icon slot="icon-only" name="log-out"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<basic-header
+  [currScore]="currScore"
+  [maxScore]="maxScore"
+  [currQuestion]="currQuestion"
+  [maxQuestion]="numQuestion"
+  (returnHome)="goHome()"
+  (reportError)="reportError($event)"
+  (logout)="logout()"
+></basic-header>
 
 <ion-content>
   <ion-text *ngIf="!questionData" class="ion-text-center ion-text-wrap">Keine Frage vorhanden</ion-text>

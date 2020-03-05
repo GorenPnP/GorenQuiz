@@ -55,13 +55,8 @@
 		text-align: center;		// to center text in ion-title
 		 --background:var(--header-bg);
 	}
-	ion-toolbar * ion-button {
-		--opacity:80%;
-		--background:var(--header-bg);
-		--box-shadow: 0;
-		--border-color: var(--ion-text-color);
-	}
-	ion-toolbar ion-title {display: inline-block;}	// to center text in conjunction with 'ion-toolbar {text-align: center;}'
+
+	ion-toolbar * ion-title {display: inline-block;}	// to center text in conjunction with 'ion-toolbar {text-align: center;}'
 
 
 
@@ -69,6 +64,16 @@
 
 
 	ion-button.btn-disabled {--opacity: 10%;}
+
+
+	ion-button.in-toolbar { --ion-toolbar-background: #000; }
+	ion-button.in-toolbar.select {  }
+	ion-button.in-toolbar.special {
+		--opacity:80%;
+		--background:var(--header-bg);
+		--box-shadow: 0;
+		--border-color: var(--ion-text-color);
+	}
 
 	/* ion-slides with only an image inside */
 	ion-card.noHeader ion-card-header {display: none}

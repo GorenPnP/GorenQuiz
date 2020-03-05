@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { FlexSizeService, WindowSize } from 'src/app/services/flex-size.service';
-import { Platform } from '@ionic/angular';
 import { LevelSelectorService } from 'src/app/services/level-selector.service';
 import { AccordeonService } from 'src/app/services/accordeon.service';
+import { HeaderConfig } from 'src/app/components/full-header/full-header.component';
+import { AccordeonConfig } from 'src/app/components/accordeon-item/accordeon-item.component';
 
 export interface SolutionListEntry {
   title: string;
@@ -23,8 +23,23 @@ export interface SolutionListEntry {
 })
 export class IndexPage implements OnInit {
   headerExpanded = false;
-  WindowSize = WindowSize; // to use enum in template
-  winSize: WindowSize;
+
+  headerConfig: HeaderConfig = {
+    hideOnXS: true,
+    sectionFilter: true,
+    logout: true,
+    totalPoints: true,
+    relationAchievedPoints: true,
+    chosenQuestions: true,
+  };
+
+  accordeonConfig: AccordeonConfig = {
+    linkOnLast: true,
+    choosable: false,
+    hideOnXS: true,
+    markChosenChildren: false,
+    markCorrectAnswer: true,
+  };
 
   chosenQuestions = 0;
 
@@ -177,24 +192,13 @@ export class IndexPage implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private flexSizeService: FlexSizeService,
     private levelSelector: LevelSelectorService,
     private accordeon: AccordeonService,
-    private platform: Platform
   ) {}
 
   ngOnInit() {
-    // get initial window size
-    this.platform.ready().then(_ => {
-      this.windowSizeOnResize(null, this.platform.width());
-
-      this.flexSizeService
-        .sizeSubscription()
-        .subscribe(size => (this.winSize = size));
-
-      this.levelSelector.changedSubscription().subscribe(_ => {
-        [this.sectionFilter, this.sectionOptions] = this.levelSelector.getFilterAndOptions();
-      });
+    this.levelSelector.changedSubscription().subscribe(_ => {
+      [this.sectionFilter, this.sectionOptions] = this.levelSelector.getFilterAndOptions();
     });
 
     // TODO get initial this.sectionFilter from (local) db, then this.updateCategories() to retrieve accordion list
@@ -212,10 +216,6 @@ export class IndexPage implements OnInit {
 
   changedSelect(level: number) {
     this.levelSelector.changedSelect(level);
-  }
-
-  windowSizeOnResize(ev: any, width?: number) {
-    this.flexSizeService.adaptSize(ev, width);
   }
 
   logout() {
