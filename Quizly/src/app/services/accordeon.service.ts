@@ -36,7 +36,7 @@ export class AccordeonService {
       if (item.chosen) { sum += item.openQuestions; }
       else {
         const childSum = this.calcSelectedNum(item.children, considerChosenChildren);
-        if (considerChosenChildren) { item.childChosen = !!childSum; }
+        if (considerChosenChildren) { item.childChosen = childSum; }
         sum += childSum;
       }
     });

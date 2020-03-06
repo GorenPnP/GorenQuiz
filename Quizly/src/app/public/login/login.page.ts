@@ -17,11 +17,13 @@ export class LoginPage {
   ) {}
 
   submit(): void {
-    if (
-      !this.password ||
-      !/^.+\@.+\..+$/.test(this.email)
-    ) {
-      this.messageService.alert(`Alle Felder müssen ausgefüllt werden.`);
+
+    if (!/^.+\@.+\..+$/.test(this.email)) {
+      this.messageService.alert(`Email muss korrekt ausgefüllt sein.`);
+      return;
+    }
+    if (!this.password) {
+      this.messageService.alert(`Passwort muss korrekt ausgefüllt sein.`);
       return;
     }
 

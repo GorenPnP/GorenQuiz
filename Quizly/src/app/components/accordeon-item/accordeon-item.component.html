@@ -12,7 +12,7 @@
       [class.correctAnswer]="config.markCorrectAnswer && item.currScore >= item.maxScore">
       {{ item.currScore | formatNumber }}/{{ item.maxScore | formatNumber }} P.</ion-chip>
     <ion-chip [class.childChosen]="config.markChosenChildren && item.childChosen">
-      {{ item.openQuestions | formatNumber }}</ion-chip>
+      <ion-text *ngIf="config.markChosenChildren && item.childChosen">{{ item.childChosen }}/</ion-text>{{ item.openQuestions | formatNumber }}</ion-chip>
   </ion-note>
 
   <ion-checkbox *ngIf="config.choosable" [(ngModel)]="item.chosen" slot="end" (ionChange)="emitChanged()">

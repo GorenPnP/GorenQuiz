@@ -21,6 +21,7 @@ export class DetailPage implements OnInit {
     id: 0,
     question: {
       text: 'Can you read this?',
+      audio: 'TODO: fill here',
       images: [
         { resLocation: 'assets/Pokemon-Go.png' },
         { resLocation: 'assets/Pokédex-Skin_Cheren.png' }
@@ -31,7 +32,8 @@ export class DetailPage implements OnInit {
         text: 'option 1',
         images: [],
         chosen: false,
-        answer: null
+        answer: null,
+        audio: null
       },
       {
         text:
@@ -41,7 +43,8 @@ export class DetailPage implements OnInit {
           //          { resLocation: 'assets/Pokédex-Skin_Cheren.png' },
         ],
         chosen: false,
-        answer: null
+        answer: null,
+        audio: 'TODO fill here'
       }
     ]
   };

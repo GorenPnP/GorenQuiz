@@ -67,12 +67,15 @@
 
 
 	ion-button.in-toolbar { --ion-toolbar-background: #000; }
-	ion-button.in-toolbar.select {  }
 	ion-button.in-toolbar.special {
 		--opacity:80%;
 		--background:var(--header-bg);
 		--box-shadow: 0;
 		--border-color: var(--ion-text-color);
+	}
+
+	ion-button.play-btn {
+		--btn-bg: var(--ion-color-success);
 	}
 
 	/* ion-slides with only an image inside */
@@ -81,7 +84,6 @@
 	ion-slides.slidesResponsive ion-slide {max-height: 25%}
 	ion-slides.slidesResponsive * img {height:auto; width: 100%; max-height:100%}
 
-	.accordeon-list {}
 	.accordeon-list-1st-level {--background: var(--accordeon-list-1st-level--color);}
 	.accordeon-list-2nd-level {--background: var(--accordeon-list-2nd-level--color);}
 	.accordeon-list-3rd-level {--background: var(--accordeon-list-3rd-level--color);}
@@ -103,6 +105,12 @@
 		box-shadow: var(--answer-element-box-shadow);
 		border: var(--answer-element-border);
 	}
+
+
+	.answer-tile * ion-button.play-btn {
+		--btn-bg: #292929;
+	}
+
 	.answer-tile ion-card, .question-tile ion-card {
 		background: var(--answer-element-bg);
 		box-shadow: var(--answer-element-box-shadow);
@@ -144,7 +152,6 @@
 		font-weight: bolder;
 		font-size: larger;
 	}
-
 
 	.right-answer {background-color: #66f7a0;}
 	.wrong-answer {background-color: #f78d8d;}

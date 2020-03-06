@@ -23,17 +23,24 @@ export class RegisterPage {
               private router: Router) { }
 
   submit(): void {
-    if (
-      !this.name ||
-      !this.password ||
-      this.password !== this.passwordCheck ||
-      !/^.+\@.+\..+$/.test(this.email)
-    ) {
-      this.messageService.alert(`Alle Felder müssen ausgefüllt werden und die Passwörter müssen gleich sein.`);
+    if (!this.name) {
+      this.messageService.alert(`Name muss ausgefüllt sein.`);
+      return;
+    }
+    if (!/^.+\@.+\..+$/.test(this.email)) {
+      this.messageService.alert(`Email muss ausgefüllt sein.`);
+      return;
+    }
+    if (!this.password) {
+      this.messageService.alert(`Passwort muss ausgefüllt sein.`);
+      return;
+    }
+    if (this.password !== this.passwordCheck) {
+      this.messageService.alert(`Passwörter müssen identisch sein.`);
       return;
     }
 
-    // TODO send sign in data to backend
+    // send sign in data to backend
     // if no other of that name exists and everything else worked as well, log in
     this.authService.register({email: this.email, password: this.password, name: this.name});
   }

@@ -21,7 +21,7 @@ export interface QuizListEntry {
 
   expanded: boolean;
   chosen: boolean;
-  childChosen: boolean;
+  childChosen: number;
 }
 
 @Component({
@@ -68,7 +68,7 @@ export class IndexPage implements OnInit {
       openQuestions: 4,
       expanded: false,
       chosen: false,
-      childChosen: false,
+      childChosen: 0,
       children: [
         {
           title: 'Der weiße Garten',
@@ -77,7 +77,7 @@ export class IndexPage implements OnInit {
           openQuestions: 4,
           expanded: false,
           chosen: false,
-          childChosen: false,
+          childChosen: 0,
           children: [
             {
               title: 'Klasse 3',
@@ -86,7 +86,7 @@ export class IndexPage implements OnInit {
               openQuestions: 1,
               expanded: false,
               chosen: false,
-              childChosen: false,
+              childChosen: 0,
               children: [
                 {
                   title: 'Der Anfang',
@@ -95,7 +95,7 @@ export class IndexPage implements OnInit {
                   openQuestions: 1,
                   expanded: false,
                   chosen: false,
-                  childChosen: false,
+                  childChosen: 0,
                   children: []
                 },
               ]
@@ -107,7 +107,7 @@ export class IndexPage implements OnInit {
               openQuestions: 3,
               expanded: false,
               chosen: false,
-              childChosen: false,
+              childChosen: 0,
               children: [
                 {
                   title: 'weiter gehts',
@@ -116,7 +116,7 @@ export class IndexPage implements OnInit {
                   openQuestions: 1,
                   expanded: false,
                   chosen: false,
-                  childChosen: false,
+                  childChosen: 0,
                   children: []
                 },
               ]
@@ -130,7 +130,7 @@ export class IndexPage implements OnInit {
           openQuestions: 4,
           expanded: false,
           chosen: false,
-          childChosen: false,
+          childChosen: 0,
           children: [
             {
               title: 'Klasse 3 II',
@@ -139,7 +139,7 @@ export class IndexPage implements OnInit {
               openQuestions: 1,
               expanded: false,
               chosen: false,
-              childChosen: false,
+              childChosen: 0,
               children: []
             },
             {
@@ -149,7 +149,7 @@ export class IndexPage implements OnInit {
               openQuestions: 3,
               expanded: false,
               chosen: false,
-              childChosen: false,
+              childChosen: 0,
               children: [
                 {
                   title: 'über die bekannte welt hinaus',
@@ -158,7 +158,7 @@ export class IndexPage implements OnInit {
                   openQuestions: 1,
                   expanded: false,
                   chosen: false,
-                  childChosen: false,
+                  childChosen: 0,
                   children: []
                 },
               ]
@@ -174,7 +174,7 @@ export class IndexPage implements OnInit {
       openQuestions: 10,
       expanded: false,
       chosen: false,
-      childChosen: false,
+      childChosen: 0,
       children: [
         {
           title: 'Mana',
@@ -183,7 +183,7 @@ export class IndexPage implements OnInit {
           openQuestions: 10,
           expanded: false,
           chosen: false,
-          childChosen: false,
+          childChosen: 0,
           children: [
             {
               title: 'Klasse 10',
@@ -192,7 +192,7 @@ export class IndexPage implements OnInit {
               openQuestions: 10,
               expanded: false,
               chosen: false,
-              childChosen: false,
+              childChosen: 0,
               children: [
                 {
                   title: 'ganz schön weit',
@@ -201,7 +201,7 @@ export class IndexPage implements OnInit {
                   openQuestions: 1,
                   expanded: false,
                   chosen: false,
-                  childChosen: false,
+                  childChosen: 0,
                   children: []
                 },
               ]

@@ -19,6 +19,7 @@ export class DetailPage implements OnInit {
     id: 0,
     question: {
       text: 'Can you read this?',
+      audio: 'TODO: fill here',
       images: [
         { resLocation: 'assets/Pokemon-Go.png', fromCorr: false },
         { resLocation: 'assets/Pokédex-Skin_Cheren.png', fromCorr: true },
@@ -30,6 +31,7 @@ export class DetailPage implements OnInit {
         images: [],
         chosen: true,
         correct: false,
+        audio: null,
         answer: null,
         correction: 'mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm'
       },
@@ -42,6 +44,7 @@ export class DetailPage implements OnInit {
         ],
         chosen: false,
         correct: true,
+        audio: 'TODO fill',
         answer: 'this is a given answer to a veeeeeeeeeery difficult problem concerning berry colors.',
         correction: 'no, its about the planets SUPER 6'
       }
