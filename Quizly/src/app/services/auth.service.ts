@@ -18,6 +18,11 @@ export interface User {
 })
 export class AuthService {
   authenticationState = new BehaviorSubject(false);
+  user: User = null;
+  emailVerified: boolean = false;
+  newUser: boolean = false;
+
+  userEmail: string = '';
 
   constructor(
     private plt: Platform,
@@ -25,10 +30,32 @@ export class AuthService {
     private messageService: MessageService,
     private alertController: AlertController
   ) {
-    this.afAuth.auth.languageCode = 'de';
 
-    // get initial status
-    this.plt.ready().then(() => { this.authenticate(); this.authenticationState.next(true)  });   // TODO: remove that last authState!!
+    // get initial status & updated data of user
+    this.plt.ready().then(() => {
+      this.afAuth.user.subscribe(user => this.updateUser(user));
+    });
+  }
+
+  updateUser(user: any) {
+    const oldUser = this.user;
+
+    if (this.newUser) {
+      this.newUser = false;
+      user = null;  // set this not to be authenticated
+    }
+
+    if (user === null || !user.displayName) {
+      this.user = null;
+      this.emailVerified = false;
+    } else {
+      this.user = { name: user.displayName, email: user.email, password: null };
+      this.emailVerified = user.emailVerified;
+    }
+
+    if (this.user === null) { this.verifyEmail(); }
+    if ((this.user === null && oldUser === null) || (this.user && oldUser)) { return; }
+    this.authenticate();
   }
 
   // for auth guard
@@ -37,37 +64,41 @@ export class AuthService {
   }
 
   username(): string {
-    return this.afAuth.auth.currentUser === null ? '' : this.afAuth.auth.currentUser.displayName;
+    return this.user === null ? '' : this.user.name;
   }
 
   usermail(): string {
-    return this.afAuth.auth.currentUser === null ? '' : this.afAuth.auth.currentUser.email;
+    return this.user === null ? this.userEmail : this.user.email;
   }
 
   private async authenticate() {
-    this.authenticationState.next(this.afAuth.auth.currentUser !== null && !this.authenticationState.getValue());
+    this.authenticationState.next(this.user !== null && !this.authenticationState.getValue());
   }
 
   private async verifyEmail() {
-    const email = this.afAuth.auth.currentUser.email;
 
-    if (this.afAuth.auth.currentUser.emailVerified) { return this.authenticate(); }
+    if (this.emailVerified) { return this.authenticate(); }
 
-    this.afAuth.auth.currentUser
-      .sendEmailVerification()
+    let user = await this.afAuth.currentUser;
+    if (user === null) { return; }
+    user.sendEmailVerification()
       .then(async _ => {
         // prompt them to look for email
         const alert = await this.alertController.create({
           header: 'Email verifizieren',
-          message: `An ${email} wurde eine Email versendet. Bitte verifiziere diesen Account über den enthaltenen Link.`,
+          message: `An ${this.usermail()} wurde eine Email versendet. Bitte verifiziere diesen Account über den enthaltenen Link.`,
           backdropDismiss: false
         });
         await alert.present();
 
-        setInterval(_ => {
-          this.afAuth.auth.currentUser.reload().then(_ => {
-            if (this.afAuth.auth.currentUser.emailVerified) {
-              clearInterval(); this.authenticate(); alert.dismiss();
+        setInterval(async _ => {
+
+          (await this.afAuth.currentUser).reload().then(async _ => {
+
+            user = await this.afAuth.currentUser;
+
+            if (user !== null && user.emailVerified) {
+              clearInterval(); alert.dismiss(); this.updateUser(user);
             }
           });
         }, 1000);
@@ -100,7 +131,7 @@ export class AuthService {
           text: 'Ja',
           cssClass: 'alert-ok',
           handler: async () => {
-            this.afAuth.auth.sendPasswordResetEmail(email).then(async _ => {// done sending
+            this.afAuth.sendPasswordResetEmail(email).then(async _ => {// done sending
               const thanksAlert = await this.alertController.create({
                 header: '分かりました。',
                 message: 'Die Email wurde versendet.',
@@ -121,19 +152,18 @@ export class AuthService {
   }
 
   async login(user: User): Promise<void> {
-    this.afAuth.auth
-      .signInWithEmailAndPassword(user.email, user.password).then(_ => { this.verifyEmail(); })
+    this.userEmail = user.email;
+    this.afAuth.signInWithEmailAndPassword(user.email, user.password)
       .catch(err => { this.messageService.alert(err.message); });
   }
 
   register(user: User) {
-    this.afAuth.auth
-      .createUserWithEmailAndPassword(user.email, user.password).then(_ => {
-        this.afAuth.auth.currentUser.updateProfile({
+    this.userEmail = user.email;
+    this.newUser = true;
+    this.afAuth.createUserWithEmailAndPassword(user.email, user.password).then(async _ => {
+        (await this.afAuth.currentUser).updateProfile({
           displayName: user.name,
         });
-
-        this.verifyEmail();
       })
       .catch(err => { this.messageService.alert(err.message); });
   }
@@ -150,7 +180,7 @@ export class AuthService {
           text: 'Ja',
           cssClass: 'alert-ok',
           handler: async () => {
-            this.afAuth.auth.signOut().then(_ => this.authenticate());
+            this.afAuth.signOut();
           }
         }
       ]

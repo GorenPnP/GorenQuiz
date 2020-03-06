@@ -75,7 +75,7 @@ export class DetailPage implements OnInit {
     }
   }
 
-  reportError() {
+  reportError(ev) {
     this.alert.reportError(this.questionData.id);
   }
 

@@ -90,7 +90,7 @@ export class DetailPage implements OnInit {
     this.router.navigate(['quiz', 'end']);
   }
 
-  reportError() {
+  reportError(ev) {
     this.alert.reportError(this.questionData.id);
   }
 
