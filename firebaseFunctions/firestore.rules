@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // internal-addUser
+    // internal-deleteUser
+    match /users/{uid} {
+      allow write: if false// if request.auth.uid == uid;
+    }
+  }
+}
