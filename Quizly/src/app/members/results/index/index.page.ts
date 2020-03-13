@@ -201,8 +201,8 @@ export class IndexPage implements OnInit {
       [this.sectionFilter, this.sectionOptions] = this.levelSelector.getFilterAndOptions();
     });
 
-    // TODO get initial this.sectionFilter from (local) db, then this.updateCategories() to retrieve accordion list
-    this.levelSelector.updateCategories();
+    // get initial this.sectionFilter from (local) db, then this.updateCategories() to retrieve accordion list
+    this.levelSelector.updateCategories(false);
   }
 
   toggleExpanded(...indices: number[]) {
@@ -215,7 +215,7 @@ export class IndexPage implements OnInit {
   }
 
   changedSelect(level: number) {
-    this.levelSelector.changedSelect(level);
+    this.levelSelector.changedSelect(level, false);
   }
 
   logout() {

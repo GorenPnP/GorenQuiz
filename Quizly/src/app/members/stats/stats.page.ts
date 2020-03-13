@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { WindowSize, FlexSizeService } from 'src/app/services/flex-size.service';
+import { ApiStatsService } from 'src/app/services/api-stats.service';
 
 export interface stat {
   label: string;
@@ -19,7 +20,7 @@ export class StatsPage implements OnInit {
   win: WindowSize = 0;
 
   sectionFilter = null;
-  sectionOptions = [{val: 'f', name:'Fach'}, {val: 't', name: 'Thema'}, {val: 'k', name: 'Klasse'}, {val: 'b', name: 'Bundle'}];
+  sectionOptions = [{val: 'f', name: 'Fach'}, {val: 't', name: 'Thema'}, {val: 'k', name: 'Klasse'}, {val: 'b', name: 'Bundle'}];
 
   stats: stat[] = [
     {
@@ -100,7 +101,8 @@ export class StatsPage implements OnInit {
   ];
 
   constructor(private authService: AuthService,
-              private flexSizeService: FlexSizeService) { }
+              private flexSizeService: FlexSizeService,
+              private apiStats: ApiStatsService) { }
 
   ngOnInit() {
     this.flexSizeService
@@ -109,7 +111,8 @@ export class StatsPage implements OnInit {
   }
 
   changedSelect() {
-    // TODO: send to backend and retrieve new stats
+    // send to backend and retrieve new stats
+    this.apiStats.getStats();
   }
 
   logout() {

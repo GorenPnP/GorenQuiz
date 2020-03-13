@@ -1,0 +1,57 @@
+<ion-item *ngIf="byMime.image.length">
+  <ion-slides [options]="sliderConfig" class="slidesResponsive" [pager]="byMime.image.length > 1">
+    <ion-slide *ngFor="let file of byMime.image">
+      <ion-card class="noHeader">
+        <ion-card-content>
+          <div class="swiper-zoom-container">
+            <img [src]='file.path' />
+          </div>
+          <ion-button *ngIf="deletable" (click)="delete(file.path)" expand="block" slot="icon-only">
+            <ion-icon name="trash"></ion-icon>
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+  </ion-slides>
+</ion-item>
+
+
+<ion-item *ngFor="let file of byMime.audio">
+  <audio [src]="file.path" controls preload="auto" style="max-width: 100%;"></audio>
+
+  <ion-note slot="end" *ngIf="deletable">
+    <ion-button (click)="delete(file.path)">
+      <ion-icon slot="icon-only" name="trash"></ion-icon>
+    </ion-button>
+  </ion-note>
+</ion-item>
+
+<ion-item *ngFor="let file of byMime.video">
+  <video [src]="file.path" controls preload="auto" style="max-width: 100%;"></video>
+
+  <ion-note slot="end" *ngIf="deletable">
+    <ion-button (click)="delete(file.path)">
+      <ion-icon slot="icon-only" name="trash"></ion-icon>
+    </ion-button>
+  </ion-note>
+</ion-item>
+
+<ion-item *ngFor="let file of byMime.inBrowser" tappable detail="true" (click)="open(file.path)">
+  <ion-label class="ion-text-wrap">{{ file.title }}</ion-label>
+
+  <ion-note slot="end" *ngIf="deletable">
+    <ion-button (click)="delete(file.path)">
+      <ion-icon slot="icon-only" name="trash"></ion-icon>
+    </ion-button>
+  </ion-note>
+</ion-item>
+
+<ion-item *ngFor="let file of byMime.other; let i = index">
+  <ion-label class="ion-text-wrap">{{ file.title }}</ion-label>
+
+  <ion-note slot="end" *ngIf="deletable">
+    <ion-button (click)="delete(file.path)">
+      <ion-icon slot="icon-only" name="trash"></ion-icon>
+    </ion-button>
+  </ion-note>
+</ion-item>

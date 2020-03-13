@@ -3,6 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { AlertService } from 'src/app/services/alert.service';
 
+import { ApiResultsService } from 'src/app/services/api-results.service';
+import { ApiGeneralService } from 'src/app/services/api-general.service';
+
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.page.html',
@@ -16,7 +19,7 @@ export class DetailPage implements OnInit {
     topic: 'Hello Topic',
     bundle: 4,
     points: 6,
-    id: 0,
+    id: '0',
     question: {
       text: 'Can you read this?',
       audio: 'TODO: fill here',
@@ -65,21 +68,21 @@ export class DetailPage implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private authService: AuthService,
-              private alert: AlertService
+              private alert: AlertService,
+              private apiResults: ApiResultsService,
+              private apiGeneral: ApiGeneralService
   ) {}
 
   ngOnInit() {
-    this.questionData.id = parseInt(this.route.snapshot.paramMap.get('id'), 10);
-    console.log(this.questionData.id);
-
-    // TODO maybe relocate this
-    if (this.questionData.answer_options.length === 1) {
-      this.questionData.answer_options[0].chosen = true;
-    }
+    this.questionData.id = this.route.snapshot.paramMap.get('id');
+    this.apiResults.getQuestion(this.questionData.id).then(data => {
+      this.questionData = data;
+    });
   }
 
   reportError(ev) {
-    this.alert.reportError(this.questionData.id);
+    const text = ev.target;
+    this.apiGeneral.sendBugReport(text, this.questionData.id);
   }
 
   logout() {
@@ -89,6 +92,7 @@ export class DetailPage implements OnInit {
   returnHome() {
     // TODO delete this question from review pile
 
+    this.apiResults.archive();
     this.router.navigate(['results', 'index']);
   }
 }

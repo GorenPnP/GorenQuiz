@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ApiQuizService } from './api-quiz.service';
+import { ApiResultsService } from './api-results.service';
 
 const numFilter = 4;
 
@@ -13,7 +15,9 @@ export class LevelSelectorService {
 
   changedValues: BehaviorSubject<any> = new BehaviorSubject(null);
 
-  constructor() {
+  constructor(private apiQuiz: ApiQuizService,
+              private ApiResult: ApiResultsService) {
+
     const defaultOption = [{ val: 'f', name: 'Fach' }, { val: 't', name: 'Thema' },
                            { val: 'k', name: 'Klasse' }, {val: 'b', name: 'Bundle' }];
     for (let i = 0; i < numFilter; i++) {
@@ -30,7 +34,7 @@ export class LevelSelectorService {
     return [this.sectionFilter, this.sectionOptions];
   }
 
-  changedSelect(level: number) {
+  changedSelect(level: number, ofQuiz: boolean) {
 
     this.sectionFilter.forEach((value: string, index: number) => {
       // sectionFilter would not adapt changes of its vals, so change them manually
@@ -64,13 +68,14 @@ export class LevelSelectorService {
       }
     });
 
-    this.updateCategories();
+    this.updateCategories(ofQuiz);
   }
 
-  updateCategories() {
+  updateCategories(ofQuiz: boolean) {
     this.changedValues.next(null);
 
-    // TODO do something with this.sectionFilter, send to backend and retrieve changed data, or order locally, if possible
-    // if all 3 null => one field with 'checkbox | alle | curr P./max P. open_Questions'
+    // do something with this.sectionFilter, send to backend and retrieve changed data, or order locally, if possible
+    // TODO if all 3 null => one field with 'checkbox | alle | curr P./max P. open_Questions'
+    ofQuiz ? this.apiQuiz.getAccordeon() : this.ApiResult.getAccordeon();
   }
 }

@@ -4,7 +4,7 @@
   [currQuestion]="currQuestion"
   [maxQuestion]="numQuestion"
   (returnHome)="goHome()"
-  (reportError)="reportError($event)"
+  (reportError)="reportBug()"
   (logout)="logout()"
 ></basic-header>
 
@@ -14,13 +14,13 @@
   <ion-grid fixed *ngIf="questionData">
     <ion-row class="question-tile">
       <ion-col size-lg="2" size-sm="6" size-xs="12">
-        <ion-text class="ion-text-wrap">Thema: </ion-text><ion-text class="ion-text-wrap">{{ questionData.topic }}</ion-text>
+        <ion-text class="ion-text-wrap">Thema: </ion-text><ion-text class="ion-text-wrap">{{ questionData.meta.topic }}</ion-text>
       </ion-col>
       <ion-col size-lg="1" size-sm="3" size-xs="6">
-        <ion-text class="ion-text-wrap">Bundle: </ion-text><ion-text class="ion-text-wrap">{{ questionData.bundle | formatNumber }}</ion-text>
+        <ion-text class="ion-text-wrap">Bundle: </ion-text><ion-text class="ion-text-wrap">{{ questionData.meta.bundle }}</ion-text>
       </ion-col>
       <ion-col size-lg="1" size-sm="3" size-xs="6">
-        <ion-text class="ion-text-wrap">Punkte: </ion-text><ion-text class="ion-text-wrap">{{ questionData.points | formatNumber }}</ion-text>
+        <ion-text class="ion-text-wrap">Punkte: </ion-text><ion-text class="ion-text-wrap">{{ questionData.meta.points | formatNumber }}</ion-text>
       </ion-col>
 
       <ion-col size-lg="3" size-sm="6" size-xs="12">
@@ -29,7 +29,7 @@
             <ion-card class="noHeader">
               <ion-card-content>
                 <div class="swiper-zoom-container">
-                  <img [src]='img.resLocation'/>
+                  <img [src]='img'/>
                 </div>
               </ion-card-content>
             </ion-card>
@@ -41,16 +41,17 @@
         <div class="question flex-container-row">
           <ion-text class="ion-text-wrap">{{ questionData.question.text }}</ion-text>
         </div>
-        <div *ngIf="questionData.question.audio" class="flex-container-row">
-          <ion-button class="play-btn">
-            <ion-icon slot="icon-only" name="play"></ion-icon>
-          </ion-button>
+        <div *ngIf="questionData.question.audio" class="flex-container-row" style="margin-top: 10px; margin-bottom: 10px">
+          <audio
+            [src]="questionData.question.audio"
+            controls preload="auto"
+            style="max-width: 100%;"></audio>
         </div>
       </ion-col>
     </ion-row>
 
-    <ion-row *ngFor="let answerOption of questionData.answer_options" class="answer-tile">
-      <ion-col size-sm="1" size-xs="2" [hidden]="questionData.answer_options.length === 1">
+    <ion-row *ngFor="let answerOption of questionData.answers" class="answer-tile">
+      <ion-col size-sm="1" size-xs="2" [hidden]="questionData.answers.length === 1">
         <ion-checkbox [(ngModel)]="answerOption.chosen"></ion-checkbox>
       </ion-col>
 
@@ -65,17 +66,15 @@
               <ion-card-header></ion-card-header>
               <ion-card-content>
                 <div class="swiper-zoom-container">
-                  <img [src]='img.resLocation'/>
+                  <img [src]='img'/>
                 </div>
               </ion-card-content>
             </ion-card>
           </ion-slide>
         </ion-slides>
 
-        <div *ngIf="answerOption.audio" class="flex-container-row">
-          <ion-button class="play-btn">
-            <ion-icon slot="icon-only" name="play"></ion-icon>
-          </ion-button>
+        <div *ngIf="answerOption.audio" class="flex-container-row" style="margin-top: 10px; margin-bottom: 10px">
+          <audio [src]="answerOption.audio" controls preload="auto" style="max-width: 100%;"></audio>
         </div>
       </ion-col>
 
@@ -97,14 +96,19 @@
             </ion-note>
           </ion-list-header>
 
-          <ion-item *ngFor="let file of files; let i = index" tappable>
-            <ion-label class="ion-text-wrap">{{ file.title }}</ion-label>
-            <ion-note>
-              <ion-button  (click)="deleteFile(i)">
-                <ion-icon slot="icon-only" name="trash"></ion-icon>
-              </ion-button>
-            </ion-note>
-          </ion-item>
+          <file-items
+            [byMime]="filesByMime"
+            [deletable]="false"
+            [sliderConfig]="sliderConfig"
+            (openFile)="openFile($event)"></file-items>
+
+          <file-items
+            [byMime]="userFilesByMime"
+            [deletable]="true"
+            [sliderConfig]="sliderConfig"
+            (openFile)="openFile($event)"
+            (deleteFile)="deleteFile($event)"></file-items>
+
         </ion-list>
       </ion-col>
     </ion-row>

@@ -9,13 +9,15 @@ import { FormsModule } from '@angular/forms';
 import { StatItemComponent } from './stat-item/stat-item.component';
 import { FullHeaderComponent } from './full-header/full-header.component';
 import { BasicHeaderComponent } from './basic-header/basic-header.component';
+import { FileItemsComponent } from './file-items/file-items.component';
 
 @NgModule({
   declarations: [
     AccordeonItemComponent,
     BasicHeaderComponent,
     FullHeaderComponent,
-    StatItemComponent
+    StatItemComponent,
+    FileItemsComponent
   ],
   imports: [
     IonicModule,
@@ -28,7 +30,8 @@ import { BasicHeaderComponent } from './basic-header/basic-header.component';
     AccordeonItemComponent,
     BasicHeaderComponent,
     FullHeaderComponent,
-    StatItemComponent
+    StatItemComponent,
+    FileItemsComponent
   ]
 })
 

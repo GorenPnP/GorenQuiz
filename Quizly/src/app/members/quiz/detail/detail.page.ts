@@ -3,6 +3,11 @@ import { Router } from '@angular/router';
 
 import { AuthService } from 'src/app/services/auth.service';
 import { AlertService } from 'src/app/services/alert.service';
+import { ApiQuizService } from 'src/app/services/api-quiz.service';
+
+import { DetailQuestion, File } from 'src/app/interfaces/DetailQuestion';
+import { InAppBrowserService } from 'src/app/services/in-app-browser.service';
+import { SortedByMimeType } from 'src/app/components/file-items/file-items.component';
 
 @Component({
   selector: 'app-detail',
@@ -14,42 +19,12 @@ export class DetailPage implements OnInit {
   maxScore: number = 153;
   currQuestion: number = 1;
   numQuestion: number = 1;
-  questionData = {
-    topic: 'Hello Topic',
-    bundle: 4,
-    points: 6,
-    id: 0,
-    question: {
-      text: 'Can you read this?',
-      audio: 'TODO: fill here',
-      images: [
-        { resLocation: 'assets/Pokemon-Go.png' },
-        { resLocation: 'assets/Pokédex-Skin_Cheren.png' }
-      ]
-    },
-    answer_options: [
-      {
-        text: 'option 1',
-        images: [],
-        chosen: false,
-        answer: null,
-        audio: null
-      },
-      {
-        text:
-          'option 2 with image mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm',
-        images: [
-          { resLocation: 'assets/Pokemon-Go.png' }
-          //          { resLocation: 'assets/Pokédex-Skin_Cheren.png' },
-        ],
-        chosen: false,
-        answer: null,
-        audio: 'TODO fill here'
-      }
-    ]
-  };
 
-  files = [{ title: 'some pdf file' }, { title: 'rand.txt' }];
+  fileImages: File[] = [];
+  filesByMime: SortedByMimeType = {image: [], audio: [], video: [], inBrowser: [], other: []};
+  userFilesByMime: SortedByMimeType = { image: [], audio: [], video: [], inBrowser: [], other: [] };
+
+  questionData: DetailQuestion = null;
 
   /** config for the image slider */
   sliderConfig = {
@@ -62,39 +37,60 @@ export class DetailPage implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private alert: AlertService
+    private alert: AlertService,
+    private apiQuiz: ApiQuizService,
+    private browser: InAppBrowserService,
   ) {}
 
   ngOnInit() {
-    // TODO load new question
+    // load new question
+    this.getNewQuestion();
+  }
 
-    // TODO maybe relocate this
-    if (this.questionData.answer_options.length === 1) {
-      this.questionData.answer_options[0].chosen = true;
-    }
+  private async getNewQuestion(): Promise<void> {
+    this.apiQuiz.getQuestion().then(newQuestion => {
+      if (newQuestion) {
+        this.questionData = newQuestion; // is a question to answer left? route to that
+        this.constructMimeDict(this.questionData.files, this.filesByMime);
+      }
+      else { this.router.navigate(['quiz', 'end']); }       // if not, route to end screen
+    });
   }
 
   async addFile() {
-    // TODO fill this + suitable service
-    console.log('should add file');
+    // TODO fill this, let choose file and pack for api (or do that in service)
+
+    // add new file to backend
+    this.apiQuiz.addFile().then(file => {
+
+      // add to list
+      this.questionData.userFiles.push(file);
+      this.constructMimeDict(this.questionData.userFiles, this.userFilesByMime);
+    });
   }
 
-  async deleteFile(index: number) {
-    // TODO fill this + suitable service
-    console.log(this.files[index], index);
-    this.files = this.files.filter((_, i) => i !== index);
+  openFile(path: string) { this.browser.open(path); }
+
+  async deleteFile(path: string) {
+    // delete from backend
+    this.apiQuiz.deleteFile(path).then(_ => {
+
+      // delete file from list
+      this.questionData.userFiles = this.questionData.userFiles.filter((file) => file.path !== path);
+      this.constructMimeDict(this.questionData.userFiles, this.userFilesByMime);
+
+    });
   }
 
   sendAnswer() {
-    // TODO send answer to backend
-    // TODO is a question to answer left? route to that
-
-    // if not, route to end screen
-    this.router.navigate(['quiz', 'end']);
+    // send answer to backend
+    this.apiQuiz.saveAnswer(this.questionData).then(_ => {
+      this.getNewQuestion();
+    });
   }
 
-  reportError(ev) {
-    this.alert.reportError(this.questionData.id);
+  reportBug() {
+    this.apiQuiz.reportBug();
   }
 
   logout() {
@@ -102,6 +98,16 @@ export class DetailPage implements OnInit {
   }
 
   goHome() {
-    this.alert.goHome('');
+    this.alert.goHome('', this.questionData);
+  }
+
+  constructMimeDict(files: File[], mimeDict: SortedByMimeType) {
+    files.forEach(file => {
+      if (file.mimeType.startsWith('image')) { mimeDict.image.push(file); }
+      else if (file.mimeType.startsWith('audio')) { mimeDict.audio.push(file); }
+      else if (file.mimeType.startsWith('video')) { mimeDict.video.push(file); }
+      else if (['application/pdf', 'application/xhtml+xml'].indexOf(file.mimeType) !== -1) { mimeDict.inBrowser.push(file); }
+      else { mimeDict.other.push(file); }
+    });
   }
 }

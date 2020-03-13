@@ -2,7 +2,7 @@
   <ion-tab-bar slot='bottom'>
     <ion-tab-button tab='quiz/index' [class.tab-selected]="selectedTab === TabNames.quiz">
       <ion-item>
-        <ion-badge *ngIf="openQuiz" slot="end">{{ openQuiz }}</ion-badge>
+        <ion-badge id="open-quiz-badge" *ngIf="openQuiz" slot="end">{{ openQuiz }}</ion-badge>
         <ion-icon name='help'></ion-icon>
         <ion-label class='ion-text-wrap' [class.hide]="win < WindowSize.sm">Quiz</ion-label>
       </ion-item>
