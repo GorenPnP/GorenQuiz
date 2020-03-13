@@ -1,5 +1,11 @@
 import * as functions from 'firebase-functions';
 
+import * as admin from 'firebase-admin';
+admin.initializeApp();
+
+export const db = admin.firestore();
+
+
 exports.internal = require('./internal');
 exports.general = require('./general');
 exports.quiz = require('./quiz');
